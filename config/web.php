@@ -13,6 +13,7 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@prices'   => '@config/prices/prices.php',
     ],
     'components' => [
         'request' => [
