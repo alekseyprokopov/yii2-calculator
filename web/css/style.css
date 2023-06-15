@@ -1,10 +1,11 @@
-body { 
+body {
     font-weight: 300;
     background-image: linear-gradient(79.8deg, rgb(21, 21, 21) 12.76%, rgb(27, 27, 28) 40.99%, rgb(38, 39, 41) 94.64%);
+    color: white;
+    padding-top: calc(114vw / 19.2);
 }
 
-
-.calculator-name{
+h1{
     font-size: calc(1.375rem + 1.5vw);
     color: white;
     line-height: 1.5;
@@ -13,7 +14,7 @@ body {
 .logo {
     width: calc(385vw / 19.2);
     height: calc(114vw / 19.2);
-    background: url(../images/logo.png) center center no-repeat;
+    background: url(../img/logo.png) center center no-repeat;
     background-size: contain;
     filter: brightness(0) saturate(100%) invert(82%) sepia(69%) saturate(5569%) hue-rotate(350deg) brightness(99%) contrast(104%);
 }
@@ -23,6 +24,7 @@ body {
     padding-top: calc(0.375rem + var(--bs-border-width));
     padding-bottom: calc(0.375rem + var(--bs-border-width));
     margin-bottom: 0;
-    font-size: calc(1.15rem + 0.1vw);
+    /*font-size: calc(1.15rem + 0.1vw);*/
 }
+
 
