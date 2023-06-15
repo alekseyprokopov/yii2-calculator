@@ -1,7 +1,14 @@
 <?php
 
-use app\assets\AppAsset;
+/** @var yii\web\View $this */
+
+/** @var string $content */
+
 use yii\helpers\Html;
+use yii\bootstrap5\Nav;
+use yii\bootstrap5\NavBar;
+use yii\bootstrap5\Breadcrumbs;
+use app\assets\AppAsset;
 
 AppAsset::register($this);
 
@@ -12,23 +19,38 @@ $this->registerMetaTag(['name' => 'description', 'content' => $this->params['met
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
 ?>
-<?php $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>" class="h-100">
-<head>
-    <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
-</head>
 
-<body class="d-flex flex-column h-100">
+
+
+<?php $this->beginPage() ?>
+    <!DOCTYPE html>
+    <html lang="<?= Yii::$app->language ?>" class="h-100">
+    <head>
+        <title><?= Html::encode($this->title) ?></title>
+        <?php $this->head() ?>
+    </head>
+
+    <body class="d-flex flex-column h-100">
 
     <?php $this->beginBody() ?>
-    <header id="header" class="d-flex flex-wrap justify-content-left py-3 mb-4 container">
-        <nav id="w0" class="navbar-expand-md navbar-dark  navbar">
-            <div class="container">
-                <a href="/" class="logo"></a>
-            </div>
-        </nav>
+
+    <header id="header" class="py-4">
+        <?php
+        NavBar::begin([
+            'brandLabel' => Html::tag('div', '', ['class' => 'logo']),
+            'brandUrl' => Yii::$app->homeUrl,
+            'options' => ['class' => 'navbar-expand-md navbar-dark fixed-top'],
+            'containerOptions' => ['class' => ' justify-content-end']
+        ]);
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-right d-flex gap-3'],
+            'items' => [
+                ['label' => 'КАЛЬКУЛЯТОР', 'url' => ['/site/index']],
+                ['label' => 'О НАС', 'url' => ['/site/about']],
+            ]
+        ]);
+        NavBar::end();
+        ?>
     </header>
 
     <main id="main" class="flex-shrink-0" role="main">
@@ -41,19 +63,18 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     </main>
 
 
-
     <footer id="footer" class="mt-auto py-3 bg-light">
         <div class="container">
             <div class="row text-muted">
                 <div class="col-md-6 text-center text-md-start">&copy; Prokopov Aleksey</div>
                 <div class="col-md-6 text-center text-md-end"><a href="https://github.com/alekseyprokopov"
-                        rel="external" class="link-secondary">GitHub</a></div>
+                                                                 rel="external" class="link-secondary">GitHub</a></div>
             </div>
         </div>
     </footer>
-   
-<?php $this->endBody() ?>
-</body>
 
-</html>
+    <?php $this->endBody() ?>
+    </body>
+
+    </html>
 <?php $this->endPage() ?>
