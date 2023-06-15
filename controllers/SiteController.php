@@ -7,8 +7,10 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\CalculatorForm;
+
+//use app\models\LoginForm;
+//use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -61,7 +63,22 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new CalculatorForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            Yii::$app->session->setFlash('success', 'Данные приняты');
+            $model->saveToQueue();
+
+            return $this->render('result', [
+                'model' => $model,
+            ]);
+
+//            return $this->refresh();
+        }
+
+        return $this->render('index', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -108,7 +125,6 @@ class SiteController extends Controller
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
-
             return $this->refresh();
         }
         return $this->render('contact', [
@@ -126,7 +142,7 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionCalculator() 
+    public function actionCalculator()
     {
         return $this->render('calculator');
     }
