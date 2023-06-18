@@ -26,7 +26,7 @@ class CalculatorForm extends Model
         ];
     }
 
-    public function saveToQueue()
+    public function saveToQueue(): void
     {
         $basePath = \Yii::getAlias('@runtime') . '/queue.job';
         $data = get_object_vars($this);
@@ -38,7 +38,6 @@ class CalculatorForm extends Model
         foreach ($data as $key => $value) {
             file_put_contents($basePath, "{$key} => {$value}" . PHP_EOL, FILE_APPEND);
         }
-        return $this;
     }
 
 }

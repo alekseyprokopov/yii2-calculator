@@ -4,9 +4,9 @@ namespace app\commands;
 
 use yii\console\Controller;
 use yii\helpers\Console;
-
-global $prices;
-$prices = require '.\config\prices.php';
+use app\models\CalculatorForm;
+use yii\console\ExitCode;
+use yii\helpers\BaseConsole;
 
 class CalculateController extends Controller
 {
@@ -21,35 +21,23 @@ class CalculateController extends Controller
 
     public function actionIndex()
     {
-        global $prices;
+        
+        if($this->validate() === false ) {
 
-        $types = ['шрот' => true, 'жмых' => true, 'соя' => true,];
-        $months = ['январь' => true, 'февраль' => true, 'август' => true, 'сентябрь' => true, 'октябрь' => true, 'ноябрь' => true];
-        $tonnages = ['25' => true, '50' => true, '75' => true, '100' => true,];
-
-        //valid1 NotEnoughArguments
-        if (!isset($this->type)) {
-            $this->printNotEnoughArguments("type");
-            return;
-        } elseif (!isset($this->tonnage)) {
-            $this->printNotEnoughArguments("tonnage");
-            return;
-        } elseif (!isset($this->month)) {
-            $this->printNotEnoughArguments("month");
-            return;
+            return ExitCode::DATAERR;
         }
 
-        //valid2 NotExists
-        if (!array_key_exists($this->type, $types)) {
-            $this->printNotExistsError('type', $this->type);
-            return;
-        } elseif (!array_key_exists($this->tonnage, $tonnages)) {
-            $this->printNotExistsError('tonnage', $this->tonnage);
-            return;
-        } elseif (!array_key_exists($this->month, $months)) {
-            $this->printNotExistsError('month', $this->month);
-            return;
+        $prices = require(\Yii::getAlias('@app/config/prices.php'));
+
+        // dd($prices[$this->type][$this->tonnage][$this->month]);
+
+        if($this->validatePrice($prices) === false ) {
+
+            return ExitCode::DATAERR;
         }
+
+
+        $model = new CalculatorForm();
 
 
         echo "Месяц: {$this->month}" . PHP_EOL;
@@ -57,21 +45,70 @@ class CalculateController extends Controller
         echo "Тоннаж: {$this->tonnage}" . PHP_EOL;
         echo "Результат: {$prices[$this->type][$this->tonnage][$this->month]}" . PHP_EOL;
 
-        echo $this->table($this->type);
+        echo $this->drawTable($prices);
         die;
     }
 
-    private function printNotExistsError($key, $value)
+
+    private function validate(): bool
     {
-        $message = $this->ansiFormat('выполнение команды завершено с ошибкой' . PHP_EOL . "не найден прайс для значения --$key=$value", Console::FG_RED);
-        echo $message;
+        if (
+            empty($this->type) === true || 
+            empty($this->tonnage) === true ||
+            empty($this->month) === true 
+        ) {
+            Console::output(Console::ansiFormat("выполнение команды завершено с ошибкой. " . PHP_EOL . "недостаточно аргументов" . PHP_EOL, [BaseConsole::FG_RED]));
+            return false;
+        }
+
+
+        
+
+        return true;
+
     }
 
-    private function printNotEnoughArguments($key)
+    private function validatePrice($prices): bool
     {
-        $message = $this->ansiFormat("выполнение команды завершено с ошибкой. " . PHP_EOL . "необходимо ввести  --$key" . PHP_EOL, Console::FG_RED);
-        echo $message;
+        $errorMessage = [];
+
+        if (isset($prices[$this->type]) === false) 
+        {
+            $errorMessage[] = 'не найден прайс для значения: ' . $this->type ;
+        }
+
+        if (isset($prices[$this->type][$this->tonnage]) === false) 
+        {
+            $errorMessage[] = 'не найден прайс для значения: ' . $this->tonnage ;
+        }
+
+        if (isset($prices[$this->type][$this->tonnage][$this->month]) === false) 
+        {
+            $errorMessage[] = 'не найден прайс для значения: ' . $this->month ;
+        }
+
+        if(count($errorMessage) !== 0) {
+
+
+
+            Console::output(Console::ansiFormat("выполнение команды завершено с ошибкой. " . PHP_EOL . 
+            implode(PHP_EOL,$errorMessage) . PHP_EOL .
+            "проверьте корректность значений" . PHP_EOL, [BaseConsole::FG_RED]));
+
+
+            return false;
+        }
+
+        
+        
+
+        return true;
+
     }
+
+    
+
+    
 
 
     public function table($type)
@@ -122,32 +159,43 @@ class CalculateController extends Controller
         return $tables[$type];
     }
 
-//    private function getTable($type)
-//    {
-//        $raw = 'шрот';
-//        $result = ['| т/м'];
-//
-//        foreach ($prices[$raw]['25'] as $month => $value) {
-//            $result[] = $month;
-//        }
-//
-//        $top = implode(' | ', $result) . " |";
-//
-//        $between = "";
-//
-//        for ($i = 0; $i < strlen($top); $i++) {
-//            if ($top[$i] === '|') {
-//                $between .= '+';
-//            } else {
-//                $between .= '-';
-//            }
-//        }
-//
-//        echo strlen($top);
-//        echo strlen($between);
-//
-//
-//    }
+   private function drawTable($prices)
+   {
+    $months = array_keys($prices[$this->type][$this->tonnage]);
+    $tonnages = array_keys($prices[$this->type]);
+
+
+    $between = '+----------------+' . str_repeat('------------+', count($months)) . PHP_EOL;
+
+    $table = $between . '| Месяц / Тоннаж |';
+
+    foreach($months as $month){
+        $table .= ' ' . str_pad(substr($month, 0,12), 16, ' ', STR_PAD_BOTH) . ' |';
+    }
+
+
+    $table .= PHP_EOL;
+    $table .= $between;
+
+    foreach($tonnages as $tonnage){
+        $table .= '| ' . str_pad($tonnage, 14, ' ') . ' |';
+
+        foreach($months as $month){
+            $value = $prices[$this->type][$tonnage][$month];
+            $table .= ' ' . str_pad($value, 10, ' ', STR_PAD_BOTH) . ' |';
+        }
+        $table .= PHP_EOL;
+    }
+    $table .= $between;
+
+
+
+    Console::output(Console::ansiFormat($table), [BaseConsole::FG_RED]);
+    // dd($table);
+    // $tonnages 
+
+    // return $months
+   }
 }
 
 
