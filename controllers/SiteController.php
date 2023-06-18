@@ -66,68 +66,10 @@ class SiteController extends Controller
         $model = new CalculatorForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            Yii::$app->session->setFlash('success', 'Данные приняты');
             $model->saveToQueue();
-
-            return $this->render('result', [
-                'model' => $model,
-            ]);
-
-//            return $this->refresh();
         }
 
         return $this->render('index', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-            return $this->refresh();
-        }
-        return $this->render('contact', [
             'model' => $model,
         ]);
     }
@@ -142,8 +84,4 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionCalculator()
-    {
-        return $this->render('calculator');
-    }
 }
