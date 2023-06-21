@@ -9,10 +9,9 @@ use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Modal;
 
-$prices = require '../config/prices.php';
-$types = array_keys($prices);
-$tonnages = array_keys($prices[array_rand($prices)]);
-$months = array_keys($prices[array_rand($prices)][$tonnages[array_rand($tonnages)]]);
+$types = $model->getRawTypes();
+$tonnages = $model->getTonnages();
+$months = $model->getMonths();
 
 $this->title = 'Калькулятор';
 ?>
@@ -45,6 +44,7 @@ $this->title = 'Калькулятор';
                 'class' => 'btn btn-warning mt-2 btn-block',
                 'name' => 'calculator-button'
             ]) ?>
+
             <?php if (empty($model->type) === false): ?>
                 <?php
                 Modal::begin([
@@ -55,15 +55,15 @@ $this->title = 'Калькулятор';
                 ]);
                 ?>
                 <div class="site-result">
-                    <p>Cырье: <?= $model['type'] ?></p>
-                    <p>Месяц: <?= $model['month'] ?></p>
-                    <p>Тоннаж: <?= $model['tonnage'] ?></p>
+                    <p>Cырье: <?= $model->getType() ?></p>
+                    <p>Месяц: <?= $model->getMonth() ?></p>
+                    <p>Тоннаж: <?= $model->getTonnage() ?></p>
 
                     <table class="table table-bordered border-warning table-hover bg-transparent">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <?php foreach ($prices[$model['type']][$model['tonnage']] as $month => $value): ?>
+                            <?php foreach ($months as $month): ?>
                                 <th scope="col"><?= $month ?></th>
                             <?php endforeach; ?>
                         </tr>
@@ -73,10 +73,10 @@ $this->title = 'Калькулятор';
                         <?php foreach ($tonnages as $tonnage): ?>
                             <tr>
                                 <th scope="row"><?= $tonnage ?></th>
-                                <?php foreach ($prices[$model['type']][$tonnage] as $month => $value): ?>
+                                <?php foreach ($months as $month): ?>
                                     <td
-                                        <?php if ((string)$tonnage === $model['tonnage'] && $month === $model['month']): ?> class="bg-warning") <?php endif; ?>>
-                                        <?= $value ?></td>
+                                        <?php if ($model->isCorrectPrice($tonnage, $month)): ?> class="bg-warning") <?php endif; ?>>
+                                        <?= $model->getMonthPrice($tonnage, $month) ?></td>
                                 <?php endforeach; ?>
 
                             </tr>
@@ -84,7 +84,7 @@ $this->title = 'Калькулятор';
 
                         </tbody>
                     </table>
-                    <p>ИТОГО: <b><?= $prices[$model['type']][$model['tonnage']][$model['month']] . ' тыс. руб.' ?> </b>
+                    <p>ИТОГО: <b><?= $model->getPrice() . ' тыс. руб.' ?> </b>
                     </p>
                 </div>
                 <?php Modal::widget();

@@ -3,22 +3,30 @@
 namespace app\controllers;
 
 use yii\rest\ActiveController;
+use Yii;
 use yii\web\Controller;
+use app\models\CalculatorForm;
 
-class ApiController extends Controller
+class ApiController extends ActiveController
 {
+    public $modelClass = 'app\models\CalculatorForm';
 
     public function actionCalculatePrice()
     {
-        $prices = require '../config/prices.php';
+        $calculator = new CalculatorForm();
 
-        $month = $_GET['month'];
-        $type = $_GET['raw_type'];
-        $tonnage = $_GET['tonnage'];
-        $price = $prices[$type][$tonnage][$month];
+        $calculator->month = Yii::$app->request->get('month');
+        $calculator->type = Yii::$app->request->get('raw_type');
+        $calculator->tonnage = Yii::$app->request->get('tonnage');
 
-        $result = ['price' => $price, 'price_list' => [$type => $prices[$type]]];
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
+        $price = $calculator->getPrice();
+
+        if (isset($price) == false) {
+            return json_encode(["error" => 404], JSON_UNESCAPED_UNICODE);
+        }
+
+        $priceList = $calculator->getRawPrice();
+        return json_encode(['price' => $price, [$calculator->type => $priceList]], JSON_UNESCAPED_UNICODE);
 
     }
 }
