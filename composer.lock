@@ -1494,9 +1494,6 @@
                 "debug",
                 "dump"
             ],
-            "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/v5.4.24"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -5341,5 +5338,5 @@
         "php": ">=7.4.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "1.1.0"
 }

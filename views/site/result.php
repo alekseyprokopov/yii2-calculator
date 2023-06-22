@@ -10,8 +10,8 @@ use yii\helpers\Html;
 $prices = require '../config/prices.php';
 
 $this->title = 'Результат:';
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
-
 <div class="site-result">
     <h1><?= Html::encode($this->title) ?></h1>
     <p>Cырье: <?= $model['type'] ?></p>
@@ -29,15 +29,17 @@ $this->title = 'Результат:';
         </thead>
         <tbody>
 
+
         <?php foreach ($prices[$model['type']] as $tonnage => $value): ?>
             <tr>
                 <th scope="row"><?= $tonnage ?></th>
 
                 <?php foreach ($prices[$model['type']][$tonnage] as $month => $value): ?>
                     <td
-                        <?php if ((string)$tonnage === $model['tonnage'] && $month === $model['month']): ?> class="bg-warning") <?php endif; ?>>
+                        <?php if ($tonnage === (int)$model['tonnage'] && $month === $model['month']): ?> class="bg-warning") <?php endif; ?>>
                         <?= $value ?></td>
                 <?php endforeach; ?>
+
 
             </tr>
         <?php endforeach; ?>
@@ -45,6 +47,6 @@ $this->title = 'Результат:';
 
         </tbody>
     </table>
-    <p>ИТОГО: <?= $prices[$model['type']][$model['tonnage']][$model['month']] . ' тыс. руб.' ?></p>
+    <p>ИТОГО: <?= $prices[$model['type']][$model['tonnage']][$model['month']] . ' тыс. руб.'?></p>
 
 </div>
