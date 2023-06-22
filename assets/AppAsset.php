@@ -23,9 +23,10 @@ class AppAsset extends AssetBundle
         // for Calculator:
         'css/style.css',
     ];
-    public $js = [];
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap5\BootstrapAsset'
     ];
+    public $js = ['js/modal-popup.js'];
+
 }
