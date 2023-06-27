@@ -2,15 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\PricesRepository;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\CalculatorForm;
-
-//use app\models\LoginForm;
-//use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -49,10 +46,6 @@ class SiteController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
         ];
     }
 
@@ -64,6 +57,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $model = new CalculatorForm();
+        $repository = new PricesRepository();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->saveToQueue();
@@ -71,17 +65,8 @@ class SiteController extends Controller
 
         return $this->render('index', [
             'model' => $model,
+            'repository' => $repository,
         ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 
 }

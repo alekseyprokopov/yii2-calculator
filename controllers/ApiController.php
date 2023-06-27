@@ -2,10 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\PricesRepository;
 use yii\rest\ActiveController;
 use Yii;
-use yii\web\Controller;
-use app\models\CalculatorForm;
 
 class ApiController extends ActiveController
 {
@@ -13,20 +12,21 @@ class ApiController extends ActiveController
 
     public function actionCalculatePrice()
     {
-        $calculator = new CalculatorForm();
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $calculator->month = Yii::$app->request->get('month');
-        $calculator->type = Yii::$app->request->get('raw_type');
-        $calculator->tonnage = Yii::$app->request->get('tonnage');
+        $pricesRep = new PricesRepository();
 
-        $price = $calculator->getPrice();
+        $month = Yii::$app->request->get('month');
+        $type = Yii::$app->request->get('raw_type');
+        $tonnage = Yii::$app->request->get('tonnage');
+
+        $price = $pricesRep->getPrice($type, $tonnage, $month);
 
         if (isset($price) == false) {
             return json_encode(["error" => 404], JSON_UNESCAPED_UNICODE);
         }
 
-        $priceList = $calculator->getRawPrice();
-        return json_encode(['price' => $price, [$calculator->type => $priceList]], JSON_UNESCAPED_UNICODE);
-
+        $priceList = $pricesRep->getRawPricesByType($type);
+        return json_encode(['price' => $price, $type => $priceList], JSON_UNESCAPED_UNICODE);
     }
 }
