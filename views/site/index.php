@@ -95,7 +95,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
                 </div>
                 <?php Modal::widget();
                 Modal::end() ?>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
 
         <?php $form = ActiveForm::end() ?>
