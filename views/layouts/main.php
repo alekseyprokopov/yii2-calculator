@@ -45,7 +45,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             'options' => ['class' => 'navbar-nav navbar-right d-flex gap-3'],
             'items' => [
                 ['label' => 'Расчет доставки', 'url' => ['/site/index']],
-                ['label' => 'Вход', 'url' => ['/login/index']],
+                // ['label' => 'Вход', 'url' => ['/login/index']],
             ]
         ]);
         NavBar::end();
@@ -66,9 +66,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <div class="container">
             <div class="row text-muted">
                 <div class="col-md-6 text-center text-md-start">&copy; ЭФКО Стартер 2023</div>
-                <div class="col-md-6 text-center text-md-end"><a
-                        href="https://gitlab-dev.efko.ru/starter/3-6-8/prokopov/calculator-yii2"
-                        rel="external" class="link-secondary">GitLab</a></div>
+                
             </div>
         </div>
     </footer>
