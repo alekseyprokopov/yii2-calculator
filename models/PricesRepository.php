@@ -7,9 +7,9 @@ class PricesRepository
     private $prices;
 
 
-    public function __construct()
+    public function __construct($prices)
     {
-        $this->prices = require '../config/prices.php';
+        $this->prices = $prices;
     }
 
     public function getPrice($type, $tonnage, $month)
@@ -19,19 +19,22 @@ class PricesRepository
 
     public function getRawTypesList()
     {
-        return array_keys($this->prices);
+        $raws = array_keys($this->prices);
+        return array_combine($raws, $raws);
     }
 
     public function getTonnagesList()
     {
         $randomRaw = $this->getRawTypesList()[array_rand($this->getRawTypesList())];
-        return array_keys($this->prices[$randomRaw]);
+        $tonnages = array_keys($this->prices[$randomRaw]);
+        return array_combine($tonnages, $tonnages);
     }
 
     public function getMonthsList()
     {
         $randomTonnage = $this->getTonnagesList()[array_rand($this->getTonnagesList())];
-        return array_keys($this->prices[array_rand($this->prices)][$randomTonnage]);
+        $months = array_keys($this->prices[array_rand($this->prices)][$randomTonnage]);
+        return array_combine($months, $months);
     }
 
     public function getRawPricesByType($type)

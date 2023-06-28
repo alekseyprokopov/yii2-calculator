@@ -27,7 +27,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
         <?=
         $form->field($model, 'type')
             ->dropDownList(
-                array_combine($repository->getRawTypesList(), $repository->getRawTypesList()),
+                $repository->getRawTypesList(),
                 ['prompt' => 'Не выбрано'],
             );
         ?>
@@ -35,7 +35,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
         <?=
         $form->field($model, 'tonnage')
             ->dropDownList(
-                array_combine($repository->getTonnagesList(), $repository->getTonnagesList()),
+                $repository->getTonnagesList(),
                 ['prompt' => 'Не выбрано'],
             );
         ?>
@@ -43,7 +43,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
         <?=
         $form->field($model, 'month')
             ->dropDownList(
-                array_combine($repository->getMonthsList(), $repository->getMonthsList()),
+                $repository->getMonthsList(),
                 ['prompt' => 'Не выбрано']
             );
         ?>
