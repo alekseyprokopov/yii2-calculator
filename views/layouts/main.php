@@ -21,7 +21,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 ?>
 
 
-
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
     <html lang="<?= Yii::$app->language ?>" class="h-100">
@@ -45,8 +44,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right d-flex gap-3'],
             'items' => [
-                ['label' => 'КАЛЬКУЛЯТОР', 'url' => ['/site/index']],
-                ['label' => 'О НАС', 'url' => ['/site/about']],
+                ['label' => 'Расчет доставки', 'url' => ['/site/index']],
+                ['label' => 'Вход', 'url' => ['/login/index']],
             ]
         ]);
         NavBar::end();
@@ -66,9 +65,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <footer id="footer" class="mt-auto py-3 bg-light">
         <div class="container">
             <div class="row text-muted">
-                <div class="col-md-6 text-center text-md-start">&copy; Prokopov Aleksey</div>
-                <div class="col-md-6 text-center text-md-end"><a href="https://github.com/alekseyprokopov"
-                                                                 rel="external" class="link-secondary">GitHub</a></div>
+                <div class="col-md-6 text-center text-md-start">&copy; ЭФКО Стартер 2023</div>
+                <div class="col-md-6 text-center text-md-end"><a
+                        href="https://gitlab-dev.efko.ru/starter/3-6-8/prokopov/calculator-yii2"
+                        rel="external" class="link-secondary">GitLab</a></div>
             </div>
         </div>
     </footer>

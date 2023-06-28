@@ -9,15 +9,6 @@ class CalculatorForm extends Model
     public $type;
     public $month;
     public $tonnage;
-    public $prices;
-
-    public function __construct(/*$type, $tonnage, $month*/)
-    {
-//        $this->type = $type;
-//        $this->month = $month;
-//        $this->tonnage = $tonnage;
-        $this->prices = require '../config/prices.php';
-    }
 
     public function saveToQueue(): void
     {
@@ -33,53 +24,6 @@ class CalculatorForm extends Model
         }
     }
 
-    public function getPrice()
-    {
-        return $this->prices[$this->type][$this->tonnage][$this->month];
-    }
-
-    public function getMonth()
-    {
-        return $this->month;
-    }
-
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function getTonnage()
-    {
-        return $this->tonnage;
-    }
-
-    public function getRawPrice()
-    {
-        return $this->prices[$this->type];
-    }
-
-    public function getRawTypes()
-    {
-        return array_keys($this->prices);
-    }
-
-    public function getTonnages()
-    {
-        $randomRaw = $this->getRawTypes()[array_rand($this->getRawTypes())];
-        return array_keys($this->prices[$randomRaw]);
-    }
-
-    public function getMonths()
-    {
-        $randomTonnage = $this->getTonnages()[array_rand($this->getTonnages())];
-        return array_keys($this->prices[array_rand($this->prices)][$randomTonnage]);
-    }
-
-    public function getMonthPrice($tonnage, $month)
-    {
-        return $this->prices[$this->type][$tonnage][$month];
-
-    }
 
     public function isCorrectPrice($tonnage, $month): bool
     {
@@ -97,8 +41,8 @@ class CalculatorForm extends Model
     {
         return [
             'type' => 'Тип сырья:',
-            'month' => 'Месяц:',
             'tonnage' => 'Тоннаж:',
+            'month' => 'Месяц:',
         ];
     }
 
