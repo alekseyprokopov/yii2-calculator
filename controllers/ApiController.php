@@ -13,8 +13,8 @@ class ApiController extends ActiveController
     public function actionCalculatePrice()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
-        $pricesRep = new PricesRepository();
+        $data = require '../config/prices.php';
+        $pricesRep = new PricesRepository($data);
 
         $month = Yii::$app->request->get('month');
         $type = Yii::$app->request->get('raw_type');
