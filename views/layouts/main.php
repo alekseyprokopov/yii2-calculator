@@ -45,7 +45,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             'options' => ['class' => 'navbar-nav navbar-right d-flex gap-3'],
             'items' => [
                 ['label' => 'Расчет доставки', 'url' => ['/site/index']],
-                // ['label' => 'Вход', 'url' => ['/login/index']],
+//                 ['label' => 'Вход', 'url' => ['/login/index']],
             ]
         ]);
         NavBar::end();

@@ -10,7 +10,12 @@ class CalculatorForm extends Model
     public $month;
     public $tonnage;
 
-   
+    public function __construct($type = null, $month = null, $tonnage = null)
+    {
+        $this->type = $type;
+        $this->month = $month;
+        $this->tonnage = $tonnage;
+    }
 
     public function isCorrectPrice($tonnage, $month): bool
     {
@@ -19,17 +24,22 @@ class CalculatorForm extends Model
 
     public function rules()
     {
+        $notInListMessage = 'не найден прайс для значения';
         return [
-            [['type', 'month', 'tonnage'], 'required'],
+            [['type', 'month', 'tonnage'], 'required', 'message' => 'Необходимо ввести {attribute}'],
+            [['type'], 'in', 'range' => ['шрот', 'соя', 'жмых'], 'message' => $notInListMessage],
+            [['month'], 'in', 'range' => ['январь', 'февраль', 'август', 'сентябрь', 'октябрь', 'ноябрь'], 'message' => $notInListMessage],
+            [['tonnage'], 'in', 'range' => ['25', '50', '75', '100'], 'message' => $notInListMessage]
         ];
     }
+
 
     public function attributeLabels()
     {
         return [
-            'type' => 'Тип сырья:',
-            'tonnage' => 'Тоннаж:',
-            'month' => 'Месяц:',
+            'type' => 'Тип сырья',
+            'tonnage' => 'Тоннаж',
+            'month' => 'Месяц',
         ];
     }
 

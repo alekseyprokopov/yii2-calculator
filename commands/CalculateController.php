@@ -2,11 +2,14 @@
 
 namespace app\commands;
 
+use app\models\CalculatorForm;
+use app\models\PricesRepository;
 use yii\console\Controller;
 use yii\helpers\Console;
-use app\models\CalculatorForm;
 use yii\console\ExitCode;
 use yii\helpers\BaseConsole;
+use yii\console\widgets\Table;
+use Yii;
 
 class CalculateController extends Controller
 {
@@ -21,93 +24,59 @@ class CalculateController extends Controller
 
     public function actionIndex()
     {
-        if ($this->validate() === false) {
-            return ExitCode::DATAERR;
-        }
+        $repository = new PricesRepository(Yii::$app->params['prices']);
+        $model = new CalculatorForm($this->type, $this->month, $this->tonnage);
 
-        $prices = require(\Yii::getAlias('@app/config/prices.php'));
-        if ($this->validatePrice($prices) === false) {
-            return ExitCode::DATAERR;
-        }
+        if ($model->validate()) {
+            echo "Месяц: $this->month" . PHP_EOL
+                . "Тип сырья: $this->type" . PHP_EOL
+                . "Тоннаж: $this->tonnage" . PHP_EOL
+                . "Результат: {$repository->getResultPrice($this->type,$this->tonnage,$this->month)} тыс. руб." . PHP_EOL;
+            $this->drawTable($repository, $this->type);
+            return ExitCode::OK;
+        };
 
-        echo "Месяц: {$this->month}" . PHP_EOL;
-        echo "Тип: {$this->type}" . PHP_EOL;
-        echo "Тоннаж: {$this->tonnage}" . PHP_EOL;
-        echo "Результат: {$prices[$this->type][$this->tonnage][$this->month]}" . PHP_EOL;
-        echo $this->drawTable($prices);
-        die;
+        $errorMessage = "выполнение команды завершено с ошибкой. " . PHP_EOL;
+        foreach ($model->getErrors() as $property => $msgArray) {
+            $errorMessage .= array_reduce($msgArray, fn($prev, $next) => $prev . mb_strtolower($next) . " (--$property)", '') . PHP_EOL;
+        }
+        $errorMessage .= 'проверьте корректность введенных значений' . PHP_EOL;
+
+        Console::output(Console::ansiFormat($errorMessage, [BaseConsole::FG_RED]));
+        return ExitCode::DATAERR;
     }
 
-
-    private function validate(): bool
+    private function drawTable(PricesRepository $repository, string $type)
     {
-        if (
-            empty($this->type) === true ||
-            empty($this->tonnage) === true ||
-            empty($this->month) === true
-        ) {
-            Console::output(Console::ansiFormat("выполнение команды завершено с ошибкой. " . PHP_EOL . "недостаточно аргументов" . PHP_EOL, [BaseConsole::FG_RED]));
-            return false;
-        }
+        $table = new Table();
+        $table
+            ->setHeaders(['тоннаж/месяц', ...array_keys($repository->getMonthsList())])
+            ->setRows(
+                array_map(function ($tonnage, $month) {
+                    return [$tonnage, ...array_values($month)];
+                },
+                    array_keys($repository->getRawPricesByType($type)), //tonnage
+                    $repository->getRawPricesByType($type)) //month => price
+            )
+            ->setChars([
+                'top' => '-',
+                'top-mid' => '+',
+                'top-left' => '+',
+                'top-right' => '+',
+                'bottom' => '-',
+                'bottom-mid' => '+',
+                'bottom-left' => '+',
+                'bottom-right' => '+',
+                'left' => '|',
+                'left-mid' => '+',
+                'mid' => '-',
+                'mid-mid' => '-',
+                'right' => '|',
+                'right-mid' => '+',
+                'middle' => '|',
+            ]);
 
-        return true;
-
-    }
-
-    private function validatePrice($prices): bool
-    {
-        $errorMessage = [];
-
-        if (isset($prices[$this->type]) === false) {
-            $errorMessage[] = 'не найден прайс для значения: ' . $this->type;
-        }
-
-        if (isset($prices[$this->type][$this->tonnage]) === false) {
-            $errorMessage[] = 'не найден прайс для значения: ' . $this->tonnage;
-        }
-
-        if (isset($prices[$this->type][$this->tonnage][$this->month]) === false) {
-            $errorMessage[] = 'не найден прайс для значения: ' . $this->month;
-        }
-
-        if (count($errorMessage) !== 0) {
-            Console::output(Console::ansiFormat("выполнение команды завершено с ошибкой. " . PHP_EOL .
-                implode(PHP_EOL, $errorMessage) . PHP_EOL .
-                "проверьте корректность значений" . PHP_EOL, [BaseConsole::FG_RED]));
-            return false;
-        }
-
-        return true;
-
-    }
-
-    private function drawTable($prices)
-    {
-        $months = array_keys($prices[$this->type][$this->tonnage]);
-        $tonnages = array_keys($prices[$this->type]);
-        $between = '+----------------+' . str_repeat('------------+', count($months)) . PHP_EOL;
-        $table = $between . '| Месяц / Тоннаж |';
-
-        foreach ($months as $month) {
-            $table .= ' ' . str_pad(substr($month, 0, 12), 16, ' ', STR_PAD_BOTH) . ' |';
-        }
-
-        $table .= PHP_EOL;
-        $table .= $between;
-
-        foreach ($tonnages as $tonnage) {
-            $table .= '| ' . str_pad($tonnage, 14, ' ') . ' |';
-
-            foreach ($months as $month) {
-                $value = $prices[$this->type][$tonnage][$month];
-                $table .= ' ' . str_pad($value, 10, ' ', STR_PAD_BOTH) . ' |';
-            }
-            $table .= PHP_EOL;
-        }
-        $table .= $between;
-
-        Console::output(Console::ansiFormat($table), [BaseConsole::FG_RED]);
-
+        Console::output(Console::ansiFormat($table->run(), [BaseConsole::FG_RED]));
     }
 }
 

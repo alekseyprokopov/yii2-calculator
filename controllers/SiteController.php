@@ -56,12 +56,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $prices = require '../config/prices.php';
-        
         $model = new CalculatorForm();
         $repository = new PricesRepository(Yii::$app->params['prices']);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            //Save to Queue
             $basePath = \Yii::getAlias('@runtime') . '/queue.job';
             $data = $model->getAttributes();
 
@@ -71,7 +70,7 @@ class SiteController extends Controller
 
             foreach ($data as $key => $value) {
                 file_put_contents($basePath, "{$key} => {$value}" . PHP_EOL, FILE_APPEND);
-        }
+            }
         }
 
         return $this->render('index', [
