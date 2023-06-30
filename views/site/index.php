@@ -81,7 +81,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
                                 <?php foreach ($repository->getMonthsList() as $month): ?>
                                     <td
                                         <?php if ($model->isCorrectPrice($tonnage, $month)): ?> class="bg-warning") <?php endif; ?>>
-                                        <?= $repository->getPrice($model->type, $tonnage, $month) ?></td>
+                                        <?= $repository->getResultPrice($model->type, $tonnage, $month) ?></td>
                                 <?php endforeach; ?>
 
                             </tr>
@@ -90,7 +90,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
                         </tbody>
                     </table>
                     <p>ИТОГО:
-                        <b><?= $repository->getPrice($model->type, $model->tonnage, $model->month) . ' тыс. руб.' ?> </b>
+                        <b><?= $repository->getResultPrice($model->type, $model->tonnage, $model->month) . ' тыс. руб.' ?> </b>
                     </p>
                 </div>
                 <?php Modal::widget();
