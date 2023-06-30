@@ -59,10 +59,19 @@ class SiteController extends Controller
         $prices = require '../config/prices.php';
         
         $model = new CalculatorForm();
-        $repository = new PricesRepository($prices);
+        $repository = new PricesRepository(Yii::$app->params['prices']);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->saveToQueue();
+            $basePath = \Yii::getAlias('@runtime') . '/queue.job';
+            $data = $model->getAttributes();
+
+            if (file_exists($basePath)) {
+                unlink($basePath);
+            }
+
+            foreach ($data as $key => $value) {
+                file_put_contents($basePath, "{$key} => {$value}" . PHP_EOL, FILE_APPEND);
+        }
         }
 
         return $this->render('index', [

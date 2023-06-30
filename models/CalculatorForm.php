@@ -10,20 +10,7 @@ class CalculatorForm extends Model
     public $month;
     public $tonnage;
 
-    public function saveToQueue(): void
-    {
-        $basePath = \Yii::getAlias('@runtime') . '/queue.job';
-        $data = get_object_vars($this);
-
-        if (file_exists($basePath)) {
-            unlink($basePath);
-        }
-
-        foreach ($data as $key => $value) {
-            file_put_contents($basePath, "{$key} => {$value}" . PHP_EOL, FILE_APPEND);
-        }
-    }
-
+   
 
     public function isCorrectPrice($tonnage, $month): bool
     {

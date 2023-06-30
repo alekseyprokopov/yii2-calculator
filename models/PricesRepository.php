@@ -7,7 +7,7 @@ class PricesRepository
     private $prices;
 
 
-    public function __construct($prices)
+    public function __construct(array $prices)
     {
         $this->prices = $prices;
     }
