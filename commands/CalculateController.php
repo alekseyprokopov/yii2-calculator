@@ -48,16 +48,20 @@ class CalculateController extends Controller
 
     private function drawTable(PricesRepository $repository, string $type)
     {
+        //rows for table
+        $rows = [];
+        foreach ($repository->getTonnagesList() as $tonnage) {
+            $row = [$tonnage];
+            foreach ($repository->getMonthsList() as $month) {
+                $row[] = $repository->getResultPrice($type, $tonnage, $month);
+            }
+            $rows[] = $row;
+        }
+
         $table = new Table();
         $table
             ->setHeaders(['тоннаж/месяц', ...array_keys($repository->getMonthsList())])
-            ->setRows(
-                array_map(function ($tonnage, $month) {
-                    return [$tonnage, ...array_values($month)];
-                },
-                    array_keys($repository->getRawPricesByType($type)), //tonnage
-                    $repository->getRawPricesByType($type)) //month => price
-            )
+            ->setRows($rows)
             ->setChars([
                 'top' => '-',
                 'top-mid' => '+',

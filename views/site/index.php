@@ -80,7 +80,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
                                 <th scope="row"><?= $tonnage ?></th>
                                 <?php foreach ($repository->getMonthsList() as $month): ?>
                                     <td
-                                        <?php if ($model->isCorrectPrice($tonnage, $month)): ?> class="bg-warning") <?php endif; ?>>
+                                        <?php if ((string)$tonnage === $model->tonnage && $month === $model->month): ?> class="bg-warning") <?php endif; ?>>
                                         <?= $repository->getResultPrice($model->type, $tonnage, $month) ?></td>
                                 <?php endforeach; ?>
 
