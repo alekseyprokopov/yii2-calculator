@@ -17,11 +17,6 @@ class CalculatorForm extends Model
         $this->tonnage = $tonnage;
     }
 
-    public function isCorrectPrice($tonnage, $month): bool
-    {
-        return (string)$tonnage === $this->tonnage && $month === $this->month;
-    }
-
     public function rules()
     {
         $notInListMessage = 'не найден прайс для значения';
@@ -43,5 +38,9 @@ class CalculatorForm extends Model
         ];
     }
 
+//    public function isCorrectPrice($tonnage, $month): bool
+//    {
+//        return (string)$tonnage === $this->tonnage && $month === $this->month;
+//    }
 
 }
