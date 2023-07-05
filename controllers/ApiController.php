@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\CalculatorForm;
 use app\models\PricesRepository;
 use yii\rest\ActiveController;
 use Yii;
@@ -16,18 +17,16 @@ class ApiController extends ActiveController
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $repository = new PricesRepository(Yii::$app->params['prices']);
-
-        $month = Yii::$app->request->get('month');
-        $type = Yii::$app->request->get('raw_type');
-        $tonnage = Yii::$app->request->get('tonnage');
-
-        $price = $repository->getResultPrice($type, $tonnage, $month);
+        $model = new CalculatorForm();
+        
+        $model->load(Yii::$app->request->get(), '');
+        $price = $repository->getResultPrice($model->type, $model->tonnage, $model->month);
 
         if (isset($price) == false) {
             return Yii::$app->response->data = ["error" => 404];
         }
 
-        $priceList = $repository->getRawPricesByType($type);
-        return Yii::$app->response->data = ['price' => $price, $type => $priceList];
+        $priceList = $repository->getRawPricesByType($model->type);
+        return Yii::$app->response->data = ['price' => $price, $model->type => $priceList];
     }
 }
