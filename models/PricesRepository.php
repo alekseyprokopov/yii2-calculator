@@ -14,7 +14,7 @@ class PricesRepository
 
     public function getResultPrice($type, $tonnage, $month)
     {
-        return $this->prices[$type][$tonnage][$month];
+        return $this->prices[$type][$month][$tonnage];
     }
 
     public function getRawTypesList()
@@ -23,18 +23,18 @@ class PricesRepository
         return array_combine($raws, $raws);
     }
 
-    public function getTonnagesList()
-    {
-        $randomRaw = $this->getRawTypesList()[array_rand($this->getRawTypesList())];
-        $tonnages = array_keys($this->prices[$randomRaw]);
-        return array_combine($tonnages, $tonnages);
-    }
-
     public function getMonthsList()
     {
-        $randomTonnage = $this->getTonnagesList()[array_rand($this->getTonnagesList())];
-        $months = array_keys($this->prices[array_rand($this->prices)][$randomTonnage]);
+        $randomRaw = $this->getRawTypesList()[array_rand($this->getRawTypesList())];
+        $months = array_keys($this->prices[$randomRaw]);
         return array_combine($months, $months);
+    }
+
+    public function getTonnagesList()
+    {
+        $randomMonth = $this->getMonthsList()[array_rand($this->getMonthsList())];
+        $tonnages = array_keys($this->prices[array_rand($this->prices)][$randomMonth]);
+        return array_combine($tonnages, $tonnages);
     }
 
     public function getRawPricesByType($type)
