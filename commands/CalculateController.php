@@ -61,25 +61,7 @@ class CalculateController extends Controller
         $table = new Table();
         $table
             ->setHeaders(['тоннаж/месяц', ...array_keys($repository->getMonthsList())])
-            ->setRows($rows)
-            ->setChars([
-                'top' => '-',
-                'top-mid' => '+',
-                'top-left' => '+',
-                'top-right' => '+',
-                'bottom' => '-',
-                'bottom-mid' => '+',
-                'bottom-left' => '+',
-                'bottom-right' => '+',
-                'left' => '|',
-                'left-mid' => '+',
-                'mid' => '-',
-                'mid-mid' => '-',
-                'right' => '|',
-                'right-mid' => '+',
-                'middle' => '|',
-            ]);
-
+            ->setRows($rows);
         Console::output(Console::ansiFormat($table->run(), [BaseConsole::FG_RED]));
     }
 }
