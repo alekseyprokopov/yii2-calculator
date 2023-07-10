@@ -14,25 +14,25 @@ use Yii;
 class CalculateController extends Controller
 {
     public $month;
-    public $type;
+    public $raw_type;
     public $tonnage;
 
     public function options($actionID)
     {
-        return ['month', 'type', 'tonnage'];
+        return ['month', 'raw_type', 'tonnage'];
     }
 
     public function actionIndex()
     {
         $repository = new PricesRepository(Yii::$app->params['prices']);
-        $model = new CalculatorForm($this->type, $this->month, $this->tonnage);
+        $model = new CalculatorForm($this->raw_type, $this->month, $this->tonnage);
 
         if ($model->validate()) {
             echo "Месяц: $this->month" . PHP_EOL
-                . "Тип сырья: $this->type" . PHP_EOL
+                . "Тип сырья: $this->raw_type" . PHP_EOL
                 . "Тоннаж: $this->tonnage" . PHP_EOL
-                . "Результат: {$repository->getResultPrice($this->type,$this->tonnage,$this->month)} тыс. руб." . PHP_EOL;
-            $this->drawTable($repository, $this->type);
+                . "Результат: {$repository->getResultPrice($this->raw_type,$this->tonnage,$this->month)} тыс. руб." . PHP_EOL;
+            $this->drawTable($repository, $this->raw_type);
             return ExitCode::OK;
         };
 
@@ -46,14 +46,14 @@ class CalculateController extends Controller
         return ExitCode::DATAERR;
     }
 
-    private function drawTable(PricesRepository $repository, string $type)
+    private function drawTable(PricesRepository $repository, string $raw_type)
     {
         //rows for table
         $rows = [];
         foreach ($repository->getTonnagesList() as $tonnage) {
             $row = [$tonnage];
             foreach ($repository->getMonthsList() as $month) {
-                $row[] = $repository->getResultPrice($type, $tonnage, $month);
+                $row[] = $repository->getResultPrice($raw_type, $tonnage, $month);
             }
             $rows[] = $row;
         }

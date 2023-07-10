@@ -57,7 +57,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $model = new CalculatorForm();
-        $repository = new PricesRepository(Yii::$app->params['prices']);
+        $repository = new PricesRepository();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             //Save to Queue
