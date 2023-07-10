@@ -17,7 +17,7 @@ class CalculatorForm extends Model
         $this->tonnage = $tonnage;
     }
 
-    public function rules()
+    public function rules(): array
     {
         $notInListMessage = 'не найден прайс для значения';
         return [
@@ -28,7 +28,7 @@ class CalculatorForm extends Model
         ];
     }
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'raw_type' => 'Тип сырья',

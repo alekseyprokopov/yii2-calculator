@@ -13,8 +13,6 @@ class m230708_183340_raw_types extends Migration
 
     public function up()
     {
-        $rawTypeRows = Yii::$app->params['sqlMigrationData']['raw_types'];
-
         $this->createTable('raw_types', [
             'id' => $this->primaryKey(11)->unsigned()->notNull(),
             'name' => $this->string(10)->unsigned()->notNull()->unique(),
@@ -22,7 +20,7 @@ class m230708_183340_raw_types extends Migration
             'updated_at' => $this->timestamp()->notNull()->defaultExpression("CURRENT_TIMESTAMP()")->append('ON UPDATE CURRENT_TIMESTAMP()'),
         ]);
 
-
+        $rawTypeRows = Yii::$app->params['sqlMigrationData']['raw_types'];
         $this->batchInsert('raw_types', ['name'], $rawTypeRows);
     }
 

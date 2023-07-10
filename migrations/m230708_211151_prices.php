@@ -12,8 +12,6 @@ class m230708_211151_prices extends Migration
      */
     public function up()
     {
-        $pricesRows = Yii::$app->params['sqlMigrationData']['prices'];
-
         $this->createTable('prices', [
             'id' => $this->primaryKey(11)->unsigned()->notNull(),
             'tonnage_id' => $this->integer(11)->unsigned()->notNull(),
@@ -84,7 +82,7 @@ class m230708_211151_prices extends Migration
             'NO ACTION'
         );
 
-
+        $pricesRows = Yii::$app->params['sqlMigrationData']['prices'];
         $this->batchInsert('prices', ['tonnage_id', 'month_id', 'raw_type_id', 'price'], $pricesRows);
     }
 
