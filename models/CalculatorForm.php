@@ -6,32 +6,32 @@ use yii\base\Model;
 
 class CalculatorForm extends Model
 {
-    public $type;
+    public $raw_type;
     public $month;
     public $tonnage;
 
-    public function __construct($type = null, $month = null, $tonnage = null)
+    public function __construct($raw_type = null, $month = null, $tonnage = null)
     {
-        $this->type = $type;
+        $this->raw_type = $raw_type;
         $this->month = $month;
         $this->tonnage = $tonnage;
     }
 
-    public function rules()
+    public function rules(): array
     {
         $notInListMessage = 'не найден прайс для значения';
         return [
-            [['type', 'month', 'tonnage'], 'required', 'message' => 'Необходимо ввести {attribute}'],
-            [['type'], 'in', 'range' => ['шрот', 'соя', 'жмых'], 'message' => $notInListMessage],
+            [['raw_type', 'month', 'tonnage'], 'required', 'message' => 'Необходимо ввести {attribute}'],
+            [['raw_type'], 'in', 'range' => ['шрот', 'соя', 'жмых'], 'message' => $notInListMessage],
             [['month'], 'in', 'range' => ['январь', 'февраль', 'август', 'сентябрь', 'октябрь', 'ноябрь'], 'message' => $notInListMessage],
             [['tonnage'], 'in', 'range' => ['25', '50', '75', '100'], 'message' => $notInListMessage]
         ];
     }
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
-            'type' => 'Тип сырья',
+            'raw_type' => 'Тип сырья',
             'tonnage' => 'Тоннаж',
             'month' => 'Месяц',
         ];
