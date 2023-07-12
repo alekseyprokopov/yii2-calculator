@@ -25,7 +25,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
         ]); ?>
 
         <?=
-        $form->field($model, 'type')
+        $form->field($model, 'raw_type')
             ->dropDownList(
                 $repository->getRawTypesList(),
                 ['prompt' => 'Не выбрано'],
@@ -52,7 +52,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
             <?= Html::submitButton('Рассчитать', ['class' => 'btn btn-warning mt-2 btn-block',
                 'name' => 'calculator-button']) ?>
 
-            <?php if (empty($model->type) === false): ?>
+            <?php if (empty($model->raw_type) === false): ?>
                 <?php
                 Modal::begin(['title' => 'Расчет',
                     'toggleButton' => ['label' => 'Посмотреть результат', 'class' => 'btn btn-success mt-2 btn-block'],
@@ -60,7 +60,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
                     'options' => ['class' => 'text-dark']]);
                 ?>
                 <div class="site-result">
-                    <p>Cырье: <?= $model->type ?></p>
+                    <p>Cырье: <?= $model->raw_type ?></p>
                     <p>Тоннаж: <?= $model->tonnage ?></p>
                     <p>Месяц: <?= $model->month ?></p>
 
@@ -81,7 +81,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
                                 <?php foreach ($repository->getMonthsList() as $month): ?>
                                     <td
                                         <?php if ((string)$tonnage === $model->tonnage && $month === $model->month): ?> class="bg-warning") <?php endif; ?>>
-                                        <?= $repository->getResultPrice($model->type, $tonnage, $month) ?></td>
+                                        <?= $repository->getResultPrice($model->raw_type, $tonnage, $month) ?></td>
                                 <?php endforeach; ?>
 
                             </tr>
@@ -90,7 +90,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
                         </tbody>
                     </table>
                     <p>ИТОГО:
-                        <b><?= $repository->getResultPrice($model->type, $model->tonnage, $model->month) . ' тыс. руб.' ?> </b>
+                        <b><?= $repository->getResultPrice($model->raw_type, $model->tonnage, $model->month) . ' тыс. руб.' ?> </b>
                     </p>
                 </div>
                 <?php Modal::widget();

@@ -12,21 +12,21 @@ class ApiController extends ActiveController
 {
     public $modelClass = 'app\models\CalculatorForm';
 
-    public function actionCalculatePrice()
+    public function actionCalculatePrice(): array
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $repository = new PricesRepository(Yii::$app->params['prices']);
+        $repository = new PricesRepository();
         $model = new CalculatorForm();
 
         $model->load(Yii::$app->request->get(), '');
-        $price = $repository->getResultPrice($model->type, $model->tonnage, $model->month);
+        $price = $repository->getResultPrice($model->raw_type, $model->tonnage, $model->month);
 
         if (isset($price) === false) {
             return ["error" => 404];
         }
 
-        $priceList = $repository->getRawPricesByType($model->type);
-        return ['price' => $price, $model->type => $priceList];
+        $priceList = $repository->getRawPricesByType($model->raw_type);
+        return ['price' => $price, $model->raw_type => $priceList];
     }
 }
