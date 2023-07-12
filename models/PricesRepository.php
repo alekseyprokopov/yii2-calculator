@@ -12,7 +12,7 @@ class PricesRepository extends ActiveRecord
 {
     public function getResultPrice($raw_type, $tonnage, $month)
     {
-        $data = (new Query())
+        return (new Query())
             ->select('price')
             ->from('prices')
             ->innerJoin('tonnages', 'prices.tonnage_id = tonnages.id')
@@ -20,9 +20,7 @@ class PricesRepository extends ActiveRecord
             ->innerJoin('raw_types', 'prices.raw_type_id = raw_types.id')
             ->where('raw_types.name=:raw_type AND tonnages.value=:tonnage AND months.name=:month',
                 ['raw_type' => $raw_type, ':tonnage' => $tonnage, ':month' => $month])
-            ->one();
-
-        return $data['price'];
+            ->scalar();
     }
 
     public function getRawTypesList(): array

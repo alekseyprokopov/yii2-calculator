@@ -20,8 +20,7 @@ class m230708_183229_months extends Migration
             'updated_at' => $this->timestamp()->notNull()->defaultExpression("CURRENT_TIMESTAMP()")->append('ON UPDATE CURRENT_TIMESTAMP()'),
         ]);
 
-        $monthRows = Yii::$app->params['sqlMigrationData']['months'];
-        $this->batchInsert('months', ['name'], $monthRows);
+        $this->batchInsert('months', ['name'], $this->getMonthsData());
     }
 
     /**
@@ -30,6 +29,13 @@ class m230708_183229_months extends Migration
     public function down()
     {
         $this->dropTable('months');
+    }
+
+    private function getMonthsData()
+    {
+        return [
+            ['январь'], ['февраль'], ['август'], ['сентябрь'], ['октябрь'], ['ноябрь']
+        ];
     }
 
 
