@@ -20,8 +20,7 @@ class m230708_183012_tonnages extends Migration
             'updated_at' => $this->timestamp()->notNull()->defaultExpression("CURRENT_TIMESTAMP()")->append('ON UPDATE CURRENT_TIMESTAMP()'),
         ]);
 
-        $tonnageRows = Yii::$app->params['sqlMigrationData']['tonnages'];
-        $this->batchInsert('tonnages', ['value'], $tonnageRows);
+        $this->batchInsert('tonnages', ['value'], $this->getTonnagesData());
     }
 
     /**
@@ -30,6 +29,11 @@ class m230708_183012_tonnages extends Migration
     public function down()
     {
         $this->dropTable('tonnages');
+    }
+
+    private function getTonnagesData(): array
+    {
+        return [[25], [50], [75], [100]];
     }
 
 }

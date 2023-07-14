@@ -24,7 +24,7 @@ class CalculateController extends Controller
 
     public function actionIndex()
     {
-        $repository = new PricesRepository(Yii::$app->params['prices']);
+        $repository = new PricesRepository();
         $model = new CalculatorForm($this->raw_type, $this->month, $this->tonnage);
 
         if ($model->validate()) {
