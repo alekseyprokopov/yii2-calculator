@@ -4,5 +4,4 @@ return [
     'adminEmail' => 'admin@example.com',
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
-    'sqlMigrationData' => require_once __DIR__ . '/sqlMigrationData.php'
 ];
