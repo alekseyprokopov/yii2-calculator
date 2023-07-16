@@ -26,6 +26,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <html lang="<?= Yii::$app->language ?>" class="h-100">
     <head>
         <title><?= Html::encode($this->title) ?></title>
+<!--        --><?php //= Html::csrfMetaTags() ?>
         <?php $this->head() ?>
     </head>
 

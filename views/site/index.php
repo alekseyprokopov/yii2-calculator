@@ -9,19 +9,24 @@
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Modal;
+use yii\widgets\Pjax;
+use yii\helpers\Url;
 
 $this->title = 'Калькулятор стоимости доставки сырья';
 ?>
 
 <div class="site-index">
-    <div class="row ">
+    <div class="row">
         <h1><?= Html::encode($this->title) ?></h1>
         <p>Пожалуйста, заполните все поля для отправки:</p>
 
         <?php $form = ActiveForm::begin([
             'id' => 'calculator-form',
-            'enableClientValidation' => true,
-            "options" => ['class' => 'col-lg-5'],
+            'enableAjaxValidation' => true,
+            'validationUrl' => Url::toRoute('site/validation'),
+            "options" => ['class' => 'col-lg-5',
+                'data-pjax' => true
+            ],
         ]); ?>
 
         <?=
@@ -51,56 +56,44 @@ $this->title = 'Калькулятор стоимости доставки сы�
         <div class="mb-2 d-flex justify-content-between">
             <?= Html::submitButton('Рассчитать', ['class' => 'btn btn-warning mt-2 btn-block',
                 'name' => 'calculator-button']) ?>
-
-            <?php if (empty($model->raw_type) === false): ?>
-                <?php
-                Modal::begin(['title' => 'Расчет',
-                    'toggleButton' => ['label' => 'Посмотреть результат', 'class' => 'btn btn-success mt-2 btn-block'],
-                    'size' => Modal::SIZE_LARGE,
-                    'options' => ['class' => 'text-dark']]);
-                ?>
-                <div class="site-result">
-                    <p>Cырье: <?= $model->raw_type ?></p>
-                    <p>Тоннаж: <?= $model->tonnage ?></p>
-                    <p>Месяц: <?= $model->month ?></p>
-
-                    <table class="table table-bordered border-warning table-hover bg-transparent">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <?php foreach ($repository->getMonthsList() as $month): ?>
-                                <th scope="col"><?= $month ?></th>
-                            <?php endforeach; ?>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        <?php foreach ($repository->getTonnagesList() as $tonnage): ?>
-                            <tr>
-                                <th scope="row"><?= $tonnage ?></th>
-                                <?php foreach ($repository->getMonthsList() as $month): ?>
-                                    <td
-                                        <?php if ((string)$tonnage === $model->tonnage && $month === $model->month): ?> class="bg-warning") <?php endif; ?>>
-                                        <?= $repository->getResultPrice($model->raw_type, $tonnage, $month) ?></td>
-                                <?php endforeach; ?>
-
-                            </tr>
-                        <?php endforeach; ?>
-
-                        </tbody>
-                    </table>
-                    <p>ИТОГО:
-                        <b><?= $repository->getResultPrice($model->raw_type, $model->tonnage, $model->month) . ' тыс. руб.' ?> </b>
-                    </p>
-                </div>
-                <?php Modal::widget();
-                Modal::end() ?>
-            <?php endif; ?>
         </div>
 
         <?php $form = ActiveForm::end() ?>
+
+        <div id="modal-content">
+        </div>
+
+
     </div>
 
 </div>
+
+
+<?php
+$js = <<<JS
+
+    $('form').on('beforeSubmit', function (){
+        var data = $(this).serialize();
+        $.ajax({
+        url:'/site/index',
+        type: 'POST',
+        data: data,
+        success: function(response) {
+          $('#modal-content').html(response)
+          $('#resultModal').modal('show')
+        }
+        })
+        return false;
+    })
+
+
+
+JS;
+
+$this->registerJs($js);
+
+//?>
+
+
 
 
