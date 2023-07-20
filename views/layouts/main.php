@@ -4,11 +4,11 @@
 
 /** @var string $content */
 
-use yii\helpers\Html;
+use app\assets\AppAsset;
+use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
-use yii\bootstrap5\Breadcrumbs;
-use app\assets\AppAsset;
+use yii\helpers\Html;
 
 AppAsset::register($this);
 
@@ -26,7 +26,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <html lang="<?= Yii::$app->language ?>" class="h-100">
     <head>
         <title><?= Html::encode($this->title) ?></title>
-<!--        --><?php //= Html::csrfMetaTags() ?>
+        <!--        --><?php //= Html::csrfMetaTags() ?>
         <?php $this->head() ?>
     </head>
 
@@ -42,12 +42,23 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             'options' => ['class' => 'navbar-expand-md navbar-dark fixed-top'],
             'containerOptions' => ['class' => ' justify-content-end']
         ]);
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right d-flex gap-3'],
-            'items' => [
-                ['label' => 'Расчет доставки', 'url' => ['/site/index']],
-//                 ['label' => 'Вход', 'url' => ['/login/index']],
+
+        $items = [
+            ['label' => 'Расчет доставки', 'url' => ['calculator/index']],
+            ['label' => 'Войти в систему', 'url' => ['user/login'], 'visible' => Yii::$app->user->isGuest],
+            ['label' => Yii::$app->user->identity->name,
+                'items' => [
+                    ['label' => 'Профиль', 'url' => ['calculator/profile']],
+                    ['label' => 'История расчётов', 'url' => ['calculator/history']],
+                    ['label' => 'Пользователи', 'url' => ['user/users'], 'visible' => Yii::$app->user->can('adminPermission')],
+                    ['label' => 'Выход', 'url' => ['user/logout'], 'linkOptions' => ['data-method' => 'post']],
+                ],
+                'visible' => !Yii::$app->user->isGuest
             ]
+        ];
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav nav navbar-right d-flex gap-3'],
+            'items' => $items
         ]);
         NavBar::end();
         ?>
@@ -67,7 +78,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <div class="container">
             <div class="row text-muted">
                 <div class="col-md-6 text-center text-md-start">&copy; ЭФКО Стартер 2023</div>
-                
+
             </div>
         </div>
     </footer>

@@ -7,7 +7,7 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-//    'layout' => 'calculator',
+    'defaultRoute' => 'calculator/index',
     'language' => 'ru',
     'name' => 'ЭФКО калькулятор',
     'aliases' => [
@@ -15,13 +15,13 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            'defaultRoles' => ['guest'],
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'VRjTK2wIVS6FhHWHUnMWV902S76TwHXx',
-            //разрешает получать пост запросы
-            'parsers' => [
-                'application/json' => 'yii\web\JsonParser',
-            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -31,7 +31,7 @@ $config = [
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'calculator/error',
         ],
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
@@ -79,3 +79,4 @@ if (YII_ENV_DEV) {
 }
 
 return $config;
+

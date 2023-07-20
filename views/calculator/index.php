@@ -15,7 +15,16 @@ use yii\helpers\Url;
 $this->title = 'Калькулятор стоимости доставки сырья';
 ?>
 
-<div class="site-index">
+<?php if (Yii::$app->session->hasFlash('success-login')): ?>
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Здравствуйте, <strong><?= Yii::$app->session->getFlash('success-login') ?></strong>, вы авторизовались в системе расчета стоимости доставки. Теперь все ваши расчеты будут сохранены для последующего просмотра в журнале расчетов.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+<?php endif; ?>
+
+<div class="calculator-index">
     <div class="row">
         <h1><?= Html::encode($this->title) ?></h1>
         <p>Пожалуйста, заполните все поля для отправки:</p>
@@ -23,10 +32,8 @@ $this->title = 'Калькулятор стоимости доставки сы�
         <?php $form = ActiveForm::begin([
             'id' => 'calculator-form',
             'enableAjaxValidation' => true,
-            'validationUrl' => Url::toRoute('site/validation'),
-            "options" => ['class' => 'col-lg-5',
-                'data-pjax' => true
-            ],
+            'validationUrl' => Url::toRoute('calculator/validation'),
+            "options" => ['class' => 'col-lg-5'],
         ]); ?>
 
         <?=
@@ -60,8 +67,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
 
         <?php $form = ActiveForm::end() ?>
 
-        <div id="modal-content">
-        </div>
+        <div id="modal-content"></div>
 
 
     </div>
@@ -72,10 +78,10 @@ $this->title = 'Калькулятор стоимости доставки сы�
 <?php
 $js = <<<JS
 
-    $('form').on('beforeSubmit', function (){
+    $('#calculator-form').on('beforeSubmit', function (){
         var data = $(this).serialize();
         $.ajax({
-        url:'/site/index',
+        url:'calculator/index',
         type: 'POST',
         data: data,
         success: function(response) {
@@ -92,7 +98,7 @@ JS;
 
 $this->registerJs($js);
 
-//?>
+?>
 
 
 

@@ -10,7 +10,7 @@ use yii\bootstrap5\Html;
 
 $this->title = 'Вход';
 ?>
-<div class="site-login">
+<div class="user-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>Пожалуйста, заполните поля ниже, чтобы войти:</p>
@@ -19,7 +19,7 @@ $this->title = 'Вход';
         <div class="col-lg-5">
 
             <?php $form = ActiveForm::begin([
-                'id' => 'login-form',
+                'id' => 'user-form',
                 'fieldConfig' => [
                     'template' => "{label}\n{input}\n{error}",
                     'labelOptions' => ['class' => 'col-lg-3 col-form-label mr-lg-3'],
@@ -28,7 +28,7 @@ $this->title = 'Вход';
                 ],
             ]); ?>
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+            <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
 
             <?= $form->field($model, 'password')->passwordInput() ?>
 
@@ -36,15 +36,13 @@ $this->title = 'Вход';
                 'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
             ]) ?>
 
-            <div class="form-group">
+            <div class="form-group d-flex justify-content-between align-items-center">
                 <div>
-                    <?= Html::submitButton('Вход', ['class' => 'btn btn-warning mt-2 btn-block', 'name' => 'login-button']) ?>
+                    <?= Html::submitButton('Вход', ['class' => 'btn btn-warning mt-2 btn-block', 'name' => 'user-button']) ?>
                 </div>
+                <?= Html::a('Регистрация', ['user/signup'], ['class' => 'btn btn-success mt-2 link-light']) ?>
             </div>
-
             <?php ActiveForm::end(); ?>
-
-
 
         </div>
     </div>

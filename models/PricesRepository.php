@@ -10,6 +10,11 @@ use yii\helpers\ArrayHelper;
 
 class PricesRepository extends ActiveRecord
 {
+    public static function tableName()
+    {
+        return 'prices';
+    }
+
     public function getResultPrice($raw_type, $tonnage, $month)
     {
         return (new Query())
@@ -19,7 +24,7 @@ class PricesRepository extends ActiveRecord
             ->innerJoin('months', 'prices.month_id = months.id')
             ->innerJoin('raw_types', 'prices.raw_type_id = raw_types.id')
             ->where('raw_types.name=:raw_type AND tonnages.value=:tonnage AND months.name=:month',
-                ['raw_type' => $raw_type, ':tonnage' => $tonnage, ':month' => $month])
+                [':raw_type' => $raw_type, ':tonnage' => $tonnage, ':month' => $month])
             ->scalar();
     }
 
@@ -69,6 +74,19 @@ class PricesRepository extends ActiveRecord
         }
 
         return $result;
+    }
+
+    public function getPriceId($raw_type, $month, $tonnage)
+    {
+        return (new Query())
+            ->select('prices.id')
+            ->from('prices')
+            ->innerJoin('tonnages', 'prices.tonnage_id = tonnages.id')
+            ->innerJoin('months', 'prices.month_id = months.id')
+            ->innerJoin('raw_types', 'prices.raw_type_id = raw_types.id')
+            ->where('raw_types.name=:raw_type AND tonnages.value=:tonnage AND months.name=:month',
+                [':raw_type' => $raw_type, ':tonnage' => $tonnage, ':month' => $month])
+            ->scalar();
     }
 
 

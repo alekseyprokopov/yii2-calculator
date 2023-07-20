@@ -2,8 +2,13 @@
 
 namespace app\controllers;
 
+use app\models\History;
+use app\models\HistorySearch;
 use app\models\PricesRepository;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\data\SqlDataProvider;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -11,22 +16,23 @@ use app\models\CalculatorForm;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
-class SiteController extends Controller
+class CalculatorController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['index', 'validation'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['performCalculation'],
+                    ],
+                    [
+                        'actions' => ['history', 'profile'],
+                        'allow' => true,
+                        'roles' => ['writeHistory'],
                     ],
                 ],
             ],
@@ -39,9 +45,7 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function actions()
     {
         return [
@@ -62,6 +66,21 @@ class SiteController extends Controller
         $repository = new PricesRepository();
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            //snapshot
+
+            if (Yii::$app->user->can('writeHistory')) {
+                $history = new History();
+
+                $history->user_id = Yii::$app->user->identity->getId();
+                $history->month = $model->month;
+                $history->tonnage = $model->tonnage;
+                $history->raw_type = $model->raw_type;
+                $history->price = $repository->getResultPrice($model->raw_type, $model->tonnage, $model->month);
+                $history->table_data = json_encode($repository->getRawPricesByType($model->raw_type));
+                $history->save();
+//
+            };
+
             return $this->renderAjax('result', [
                 'model' => $model,
                 'repository' => $repository,
@@ -74,6 +93,23 @@ class SiteController extends Controller
         ]);
     }
 
+
+    public function actionHistory()
+    {
+        $searchModel = new HistorySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->get());
+
+        return $this->render('history', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
+
+    public function actionProfile()
+    {
+        return $this->render('profile');
+    }
 
 
     public function actionValidation()
