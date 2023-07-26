@@ -1,7 +1,7 @@
 body {
     font-weight: 300;
     background-image: linear-gradient(79.8deg, rgb(21, 21, 21) 12.76%, rgb(27, 27, 28) 40.99%, rgb(38, 39, 41) 94.64%);
-    color: white;
+    /*color: white;*/
     padding-top: calc(114vw / 19.2);
 }
 
@@ -83,4 +83,15 @@ a {
     text-decoration: underline;
 }
 
+.summary{
+    color: white;
+}
+
+tbody tr{
+    cursor: pointer;
+}
+
+.role-input{
+    font-size: 15px;
+}
 

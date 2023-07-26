@@ -5,14 +5,12 @@ namespace app\controllers;
 use app\models\History;
 use app\models\HistorySearch;
 use app\models\PricesRepository;
+use app\models\CalculatorForm;
+
 use Yii;
-use yii\data\ActiveDataProvider;
-use yii\data\SqlDataProvider;
-use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\CalculatorForm;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -25,12 +23,12 @@ class CalculatorController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'validation'],
+                        'actions' => ['index', 'result', 'calculator-validation'],
                         'allow' => true,
                         'roles' => ['performCalculation'],
                     ],
                     [
-                        'actions' => ['history', 'profile'],
+                        'actions' => ['history', 'history-result'],
                         'allow' => true,
                         'roles' => ['writeHistory'],
                     ],
@@ -39,7 +37,10 @@ class CalculatorController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post'],
+//                    'index' => ['get', 'post'],
+                    'history-result' => ['get'],
+                    'calculator-validation' => ['post'],
+                    'history' => ['get'],
                 ],
             ],
         ];
@@ -55,30 +56,17 @@ class CalculatorController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $model = new CalculatorForm();
         $repository = new PricesRepository();
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            //snapshot
-
+            $session = Yii::$app->session;
+            $session->close();
             if (Yii::$app->user->can('writeHistory')) {
                 $history = new History();
-
-                $history->user_id = Yii::$app->user->identity->getId();
-                $history->month = $model->month;
-                $history->tonnage = $model->tonnage;
-                $history->raw_type = $model->raw_type;
-                $history->price = $repository->getResultPrice($model->raw_type, $model->tonnage, $model->month);
-                $history->table_data = json_encode($repository->getRawPricesByType($model->raw_type));
-                $history->save();
-//
+                $history->snapshot($model);
             };
 
             return $this->renderAjax('result', [
@@ -93,6 +81,15 @@ class CalculatorController extends Controller
         ]);
     }
 
+    public function actionCalculatorValidation()
+    {
+        $model = new CalculatorForm();
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+    }
+
 
     public function actionHistory()
     {
@@ -105,23 +102,15 @@ class CalculatorController extends Controller
         ]);
     }
 
-
-    public function actionProfile()
+    public function actionHistoryResult($id)
     {
-        return $this->render('profile');
-    }
-
-
-    public function actionValidation()
-    {
-        $model = new CalculatorForm();
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
-        }
+        $model = History::findOne($id);
+        return $this->renderAjax('history-result', ['model' => $model]);
     }
 
 }
+
+
 
 
 

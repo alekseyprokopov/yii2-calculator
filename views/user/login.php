@@ -10,7 +10,7 @@ use yii\bootstrap5\Html;
 
 $this->title = 'Вход';
 ?>
-<div class="user-login">
+<div class="user-login text-light">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>Пожалуйста, заполните поля ниже, чтобы войти:</p>

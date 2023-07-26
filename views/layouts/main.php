@@ -26,7 +26,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <html lang="<?= Yii::$app->language ?>" class="h-100">
     <head>
         <title><?= Html::encode($this->title) ?></title>
-        <!--        --><?php //= Html::csrfMetaTags() ?>
+        <?= Html::csrfMetaTags() ?>
         <?php $this->head() ?>
     </head>
 
@@ -48,9 +48,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Войти в систему', 'url' => ['user/login'], 'visible' => Yii::$app->user->isGuest],
             ['label' => Yii::$app->user->identity->name,
                 'items' => [
-                    ['label' => 'Профиль', 'url' => ['calculator/profile']],
+                    ['label' => 'Профиль', 'url' => ['user/profile?id=' . Yii::$app->user->id]],
                     ['label' => 'История расчётов', 'url' => ['calculator/history']],
-                    ['label' => 'Пользователи', 'url' => ['user/users'], 'visible' => Yii::$app->user->can('adminPermission')],
+                    ['label' => 'Пользователи', 'url' => ['administrator/user-management'], 'visible' => Yii::$app->user->can('adminPermission')],
                     ['label' => 'Выход', 'url' => ['user/logout'], 'linkOptions' => ['data-method' => 'post']],
                 ],
                 'visible' => !Yii::$app->user->isGuest

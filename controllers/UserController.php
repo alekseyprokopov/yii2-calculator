@@ -4,10 +4,13 @@ namespace app\controllers;
 
 use app\models\LoginForm;
 use app\models\SignupForm;
+use app\models\User;
+
+use Yii;
+
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use Yii;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -20,21 +23,24 @@ class UserController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'signup'],
+                        'actions' => ['login', 'signup', 'signup-validation'],
                         'allow' => true,
                         'roles' => ['guest'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'profile'],
                         'allow' => true,
-                        'roles' => ['user', 'administrator'],
+                        'roles' => ['user'],
                     ]
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
+                    'signup' => ['get', 'post'],
+                    'login' => ['get', 'post'],
                     'logout' => ['post'],
+                    'signup-validation' => ['post'],
                 ],
             ],
         ];
@@ -52,10 +58,15 @@ class UserController extends Controller
             return $this->goHome();
         }
 
-        $model->password = '';
         return $this->render('login', [
             'model' => $model,
         ]);
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->goHome();
     }
 
     public function actionSignup()
@@ -66,11 +77,6 @@ class UserController extends Controller
 
         $model = new SignupForm();
 
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
-        }
-
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
             return $this->redirect('login');
@@ -79,18 +85,44 @@ class UserController extends Controller
         return $this->render('signup', ['model' => $model]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
+    public function actionSignupValidation()
     {
-        Yii::$app->user->logout();
+        $model = new SignupForm();
 
-        return $this->goHome();
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
     }
 
+
+    public function actionProfile($id)
+    {
+        $model = User::findIdentity($id);
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('profile', [
+                'model' => $model,
+            ]);
+        }
+
+        return $this->render('profile', ['model' => $model]);
+    }
+
+    public function actionAdmin()
+    {
+        $user = new User();
+        $user->name = 'admin1';
+        $user->email = 'admin1@mail.ru';
+        $user->password = Yii::$app->security->generatePasswordHash('admin1');
+        $user->save();
+
+//            assign role
+        $auth = Yii::$app->authManager;
+        $userRole = $auth->getRole('administrator');
+        $auth->assign($userRole, $user->getId());
+        echo 'success';
+    }
 }
 
 

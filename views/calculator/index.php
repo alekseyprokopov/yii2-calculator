@@ -18,7 +18,10 @@ $this->title = 'Калькулятор стоимости доставки сы�
 <?php if (Yii::$app->session->hasFlash('success-login')): ?>
 
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        Здравствуйте, <strong><?= Yii::$app->session->getFlash('success-login') ?></strong>, вы авторизовались в системе расчета стоимости доставки. Теперь все ваши расчеты будут сохранены для последующего просмотра в журнале расчетов.
+        Здравствуйте, <strong><?= Yii::$app->session->getFlash('success-login') ?></strong>, вы авторизовались в системе
+        расчета стоимости доставки. Теперь все ваши расчеты будут сохранены для последующего просмотра в <a
+            href="calculator/history" class="link-primary">журнале
+            расчетов.</a>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
@@ -27,12 +30,12 @@ $this->title = 'Калькулятор стоимости доставки сы�
 <div class="calculator-index">
     <div class="row">
         <h1><?= Html::encode($this->title) ?></h1>
-        <p>Пожалуйста, заполните все поля для отправки:</p>
+        <p class="text-light">Пожалуйста, заполните все поля для отправки:</p>
 
         <?php $form = ActiveForm::begin([
             'id' => 'calculator-form',
             'enableAjaxValidation' => true,
-            'validationUrl' => Url::toRoute('calculator/validation'),
+            'validationUrl' => Url::toRoute('calculator/calculator-validation'),
             "options" => ['class' => 'col-lg-5'],
         ]); ?>
 
@@ -74,7 +77,23 @@ $this->title = 'Калькулятор стоимости доставки сы�
 
 </div>
 
+<?php
+//
+//$data = $repository->getRawPricesByType('соя');
+//$months = ['<th scope="col">#</th>'];
+//$tableRows = [];
+//
+//foreach ($data as $month => $item) {
+//    $months[] = '<th scope="col"><' . $month . '</th>';
+//    foreach ($item as $tonnage => $price) {
+//        $tableRows['<th scope="row">' . $tonnage . '</th>'][] = '<td' . (((string)$tonnage === $model->tonnage && $month === $model->month) ? 'class="bg-warning">' : '>') . $price . '</td>';;
+//    }
+//}
+//
+//dd($tableRows);
 
+
+?>
 <?php
 $js = <<<JS
 

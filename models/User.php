@@ -116,4 +116,18 @@ class User extends ActiveRecord implements IdentityInterface
         return User::findOne(['email' => $email]);
     }
 
+    public static function getEmailById($id)
+    {
+        $email = User::find()->select(['email'])
+            ->where(['id' => $id])
+            ->scalar();
+        return $email;
+    }
+
+    public static function getRoleById($id)
+    {
+        return Yii::$app->authManager->checkAccess($id, 'adminPermission') ? 'administrator' : 'user';
+    }
+
+
 }
