@@ -3,21 +3,18 @@
 use yii\db\Migration;
 
 /**
- * Class m230708_211151_prices
+ * Class m230726_164140_create_price
  */
-class m230708_211151_prices extends Migration
+class m230726_164140_create_price extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
     public function up()
     {
-        $this->createTable('prices', [
+        $this->createTable('price', [
             'id' => $this->primaryKey(11)->unsigned()->notNull(),
             'tonnage_id' => $this->integer(11)->unsigned()->notNull(),
             'month_id' => $this->integer(11)->unsigned()->notNull(),
             'raw_type_id' => $this->integer(11)->unsigned()->notNull(),
-            'price' => $this->integer()->unsigned()->notNull(),
+            'value' => $this->integer()->unsigned()->notNull(),
             'created_at' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP()'),
             'updated_at' => $this->timestamp()->notNull()->defaultExpression("CURRENT_TIMESTAMP()")->append('ON UPDATE CURRENT_TIMESTAMP()'),
         ]);
@@ -25,17 +22,17 @@ class m230708_211151_prices extends Migration
         //unique
         $this->createIndex(
             'UNIQUE',
-            'prices',
+            'price',
             'tonnage_id, month_id, raw_type_id',
             true,
         );
 
 
         $this->addForeignKey(
-            'fk-prices-tonnage_id',
-            'prices',
+            'fk-price-tonnage_id',
+            'price',
             'tonnage_id',
-            'tonnages',
+            'tonnage',
             'id',
             'CASCADE',
             'NO ACTION'
@@ -43,10 +40,10 @@ class m230708_211151_prices extends Migration
 
 
         $this->addForeignKey(
-            'fk-prices-month_id',
-            'prices',
+            'fk-price-month_id',
+            'price',
             'month_id',
-            'months',
+            'month',
             'id',
             'CASCADE',
             'NO ACTION'
@@ -54,16 +51,16 @@ class m230708_211151_prices extends Migration
         );
 
         $this->addForeignKey(
-            'fk-prices-raw_type_id',
-            'prices',
+            'fk-price-raw_type_id',
+            'price',
             'raw_type_id',
-            'raw_types',
+            'raw_type',
             'id',
             'CASCADE',
             'NO ACTION'
         );
 
-        $this->batchInsert('prices', ['tonnage_id', 'month_id', 'raw_type_id', 'price'], $this->getPricesData());
+        $this->batchInsert('price', ['tonnage_id', 'month_id', 'raw_type_id', 'value'], $this->getPriceData());
     }
 
     /**
@@ -71,10 +68,10 @@ class m230708_211151_prices extends Migration
      */
     public function down()
     {
-        $this->dropTable('prices');
+        $this->dropTable('price');
     }
 
-    private function getPricesData(): array
+    private function getPriceData(): array
     {
         return [
             [1, 1, 1, 125],
@@ -151,5 +148,4 @@ class m230708_211151_prices extends Migration
             [4, 6, 3, 142,],
         ];
     }
-
 }

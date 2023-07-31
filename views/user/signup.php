@@ -9,55 +9,29 @@ use yii\helpers\Url;
 $this->title = 'Регистрация';
 ?>
 
-    <div class="user-signup text-light">
-        <div class="signup-header">
-            <h1><?= Html::encode($this->title) ?></h1>
+<section class="ftco-section">
+    <div class="container">
 
-            <p>Пожалуйста, заполните поля ниже, чтобы зарегистрироваться:</p>
-        </div>
-
-
-        <div class="row mt-5">
-            <div class="col-lg-6">
-
-                <?php $form = ActiveForm::begin([
-                    'layout' => 'horizontal',
-                    'id' => 'signup-form',
-                    'enableAjaxValidation' => true,
-                    'validationUrl' => Url::toRoute('user/signup-validation'),
-
-                    'fieldConfig' => [
-                        'template' => "{label}\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}",
-                        'horizontalCssClasses' => [
-                            'label' => 'col-sm-3',
-                            'offset' => 'col-sm-offset-4',
-                            'wrapper' => 'col-sm-8',
-                            'error' => '',
-                            'hint' => '',
-                        ],
-                    ]]); ?>
-
-
-                <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
-                <?= $form->field($model, 'name')->textInput(['autofocus' => true]) ?>
-                <?= $form->field($model, 'password')->passwordInput() ?>
-                <?= $form->field($model, 'password_repeat')->passwordInput() ?>
-
-
-                <div class="form-group d-flex justify-content-between align-items-center">
-                    <div class="signup-button">
-                        <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-warning mt-2 mb-2 btn-block', 'name' => 'user-button']) ?>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="login-wrap p-4 p-md-5">
+                    <h2 class="text-center mb-4"><?= Html::encode($this->title) ?></h2>
+                    <?php $form = ActiveForm::begin([
+                        'id' => 'user-form',
+                        'enableAjaxValidation' => true,
+                        'validationUrl' => Url::toRoute('/user/signup-validation'),]); ?>
+                    <?= $form->field($model, 'email')->textInput(['autofocus' => true])->input('email', ['placeholder' => "Email"])->label(false) ?>
+                    <?= $form->field($model, 'username')->textInput(['autofocus' => true])->input('text', ['placeholder' => "Имя"])->label(false) ?>
+                    <?= $form->field($model, 'password')->passwordInput()->input('password', ['placeholder' => "Пароль"])->label(false) ?>
+                    <?= $form->field($model, 'password_repeat')->passwordInput()->input('password', ['placeholder' => "Повторите пароль"])->label(false) ?>
+                    <hr>
+                    <div class="d-grid gap-2 mb-3">
+                        <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-warning  btn-block ', 'name' => 'user-button']) ?>
                     </div>
+                    <?php ActiveForm::end(); ?>
                 </div>
-                <?php ActiveForm::end(); ?>
-
             </div>
         </div>
     </div>
+</section>
 
-
-<?php //= Html::checkbox('reveal-password', false, ['id' => 'reveal-password']) ?><!-- --><?php //= Html::label('Show password', 'reveal-password') ?>
-    <!---->
-<?php
-//$this->registerJs("jQuery('#reveal-password').change(function(){jQuery('#signupform-password').attr('type',this.checked?'text':'password');})");
-//?>

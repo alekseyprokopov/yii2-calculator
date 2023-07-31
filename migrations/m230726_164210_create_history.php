@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m230719_150317_history
+ * Class m230726_164210_create_history
  */
-class m230719_150317_history extends Migration
+class m230726_164210_create_history extends Migration
 {
 
     // Use up()/down() to run migration code without a transaction.
@@ -26,7 +26,7 @@ class m230719_150317_history extends Migration
             'fk-history-user_id',
             'history',
             'user_id',
-            'users',
+            'user',
             'id',
             'CASCADE',
             'NO ACTION'

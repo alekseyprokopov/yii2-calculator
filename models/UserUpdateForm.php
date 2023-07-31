@@ -2,28 +2,23 @@
 
 namespace app\models;
 
-use yii\base\Model;
 use Yii;
 
 class UserUpdateForm extends User
 {
     //ПЕРЕНЕСТИ!!!!
     public $id;
-    public $name;
+    public $username;
     public $email;
-    public $role;
-    /**
-     * @var User
-     */
-    private $_user;
+
+    private ?User $_user;
 
     public function __construct(User $user = null)
     {
         $this->_user = $user;
         $this->id = $user->id;
-        $this->name = $user->name;
+        $this->username = $user->username;
         $this->email = $user->email;
-        $this->role = User::getRoleById($this->id);
     }
 
     public function updateProfile()
@@ -31,12 +26,8 @@ class UserUpdateForm extends User
         if ($this->validate()) {
             $manager = Yii::$app->authManager;
             $user = $this->_user;
-            $user->name = $this->name;
+            $user->username = $this->username;
             $user->email = $this->email;
-
-            $manager->revokeAll($user->id);
-            $userRole = $manager->getRole($this->role);
-            $manager->assign($userRole, $user->getId());
 
             return $user->save();
         }
@@ -48,15 +39,13 @@ class UserUpdateForm extends User
         return [
             ['id', 'integer'],
 
-            ['name', 'required'],
-            ['name', 'match', 'pattern' => '/^[a-zA-Z\s]+$/'],
+            ['username', 'required'],
+            ['username', 'match', 'pattern' => '/^[a-zA-Z\s]+$/'],
 
             ['email', 'uniqueByEmail'],
             ['email', 'required'],
             ['email', 'email'],
 
-            ['role', 'in', 'range' => ['administrator', 'user']],
-            ['role', 'safe'],
         ];
     }
 
@@ -72,7 +61,7 @@ class UserUpdateForm extends User
     {
         return [
             'id' => 'ID',
-            'name' => 'Имя',
+            'username' => 'Имя',
             'email' => 'E-mail',
         ];
     }

@@ -17,10 +17,6 @@ use yii\db\ActiveRecord;
  */
 class History extends ActiveRecord
 {
-    public static function tableName()
-    {
-        return 'history';
-    }
 
     public function rules()
     {
@@ -32,7 +28,7 @@ class History extends ActiveRecord
         ];
     }
 
-    public function getUsers()
+    public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
@@ -42,9 +38,9 @@ class History extends ActiveRecord
         return json_decode($this->table_data);
     }
 
-    public function getUserName()
+    public function getUsername()
     {
-        return User::find()->select('name')->where(['id' => $this->user_id])->scalar();
+        return User::find()->select('username')->where(['id' => $this->user_id])->scalar();
     }
 
     public function getCalculationData()

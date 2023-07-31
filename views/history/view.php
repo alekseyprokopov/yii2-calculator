@@ -2,18 +2,16 @@
 
 /** @var yii\web\View $this */
 /** @var yii\bootstrap5\ActiveForm $form */
+
 /** @var  app\models\History $model */
-
 /** @var  app\models\PricesRepository $repository */
-
-use yii\bootstrap5\Modal;
 
 ?>
 
 
-<div class="site-result">
+<div>
 
-    <?php if (Yii::$app->user->can('adminPermission')): ?>
+    <?php if (Yii::$app->user->can('administrator')): ?>
         <p>Имя пользователя: <?= $model->getUserName() ?></p>
     <?php endif; ?>
 

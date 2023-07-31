@@ -1,16 +1,15 @@
 body {
     font-weight: 300;
     background-image: linear-gradient(79.8deg, rgb(21, 21, 21) 12.76%, rgb(27, 27, 28) 40.99%, rgb(38, 39, 41) 94.64%);
-    /*color: white;*/
-    padding-top: calc(114vw / 19.2);
 }
 
-h1{
-    font-size: calc(1.375rem + 1.5vw);
+h2 {
+    /*font-size: calc(1.375rem + 1.5vw);*/
     color: white;
     line-height: 1.5;
     font-weight: inherit;
 }
+
 .logo {
     width: calc(385vw / 19.2);
     height: calc(114vw / 19.2);
@@ -19,7 +18,7 @@ h1{
     filter: brightness(0) saturate(100%) invert(82%) sepia(69%) saturate(5569%) hue-rotate(350deg) brightness(99%) contrast(104%);
 }
 
-.form-label{
+.form-label {
     color: white;
     padding-top: calc(0.375rem + var(--bs-border-width));
     padding-bottom: calc(0.375rem + var(--bs-border-width));
@@ -83,15 +82,25 @@ a {
     text-decoration: underline;
 }
 
-.summary{
+.summary {
     color: white;
 }
 
-tbody tr{
+.table-hover tbody tr td:not(:last-child) {
     cursor: pointer;
 }
 
-.role-input{
+.role-input {
     font-size: 15px;
+}
+
+.btn-warning {
+    height: 62px;
+}
+
+.list-group-item.active{
+    background-color: #ffc107;
+    color:black;
+    border-color: #ffc107;
 }
 

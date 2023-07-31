@@ -18,10 +18,10 @@ $this->title = 'Редактировать профиль';
     <section>
         <?php $form = ActiveForm::begin([
             'layout' => 'horizontal',
-            'id' => 'update-profile-form',
+            'id' => 'user_update_form',
             'validateOnBlur' => false,
             'enableAjaxValidation' => true,
-            'validationUrl' => Url::toRoute('calculator/update-profile-validation'),
+            'validationUrl' => Url::toRoute('administrator/update-user-validation'),
             'fieldConfig' => [
                 'template' => "{label}\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}",
                 'horizontalCssClasses' => [
@@ -38,19 +38,12 @@ $this->title = 'Редактировать профиль';
                     <div class="card mb-4">
                         <div class="card-body text-center">
                             <img src=
-                                 <?= Yii::$app->authManager->checkAccess($model->id, 'adminPermission') ?
+                                 <?= Yii::$app->authManager->checkAccess($model->id, 'administrator') ?
                                      "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1.webp" :
                                      "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" ?>
                                  alt="avatar"
                                  class="rounded-circle img-fluid" style="width: 150px;">
-                            <h5 class="my-3"><?= $model->name ?></h5>
-                            <?=
-                            $form->field($model, 'role')
-                                ->dropDownList(
-                                    ['administrator' => 'Администратор', 'user' => 'Пользователь'],
-                                    ['class' => 'role-input']
-                                )->label(false);
-                            ?>
+                            <h5 class="my-3"><?= $model->username ?></h5>
                         </div>
 
                     </div>
@@ -65,7 +58,7 @@ $this->title = 'Редактировать профиль';
                                 'readonly' => true, 'class' => 'form-control-plaintext'
                             ]) ?>
                             <hr>
-                            <?= $form->field($model, 'name')->textInput(['class' => 'form-control', 'autofocus' => false]) ?>
+                            <?= $form->field($model, 'username')->textInput(['class' => 'form-control', 'autofocus' => false]) ?>
 
 
                             <hr>
@@ -103,13 +96,6 @@ $this->title = 'Редактировать профиль';
     </section>
 
 </div>
-<?php
-$js = <<<JS
-$('#update-profile-form').yiiActiveForm('remove', 'userupdateform-role');
-JS;
 
-$this->registerJs($js);
-
-?>
 
 

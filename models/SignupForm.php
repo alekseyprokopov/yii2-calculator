@@ -3,13 +3,15 @@
 namespace app\models;
 
 
+use mdm\admin\components\UserStatus;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 class SignupForm extends Model
 {
-    public $name;
+    public $username;
     public $email;
     public $password;
     public $password_repeat;
@@ -18,8 +20,8 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            ['name', 'required'],
-            ['name', 'match', 'pattern' => '/^[a-zA-Z\s]+$/'],
+            ['username', 'required'],
+            ['username', 'match', 'pattern' => '/^[a-zA-Z\s]+$/'],
 
             ['email', 'required'],
             ['email', 'unique', 'targetClass' => User::class, 'targetAttribute' => 'email'],
@@ -47,12 +49,14 @@ class SignupForm extends Model
     {
         if ($this->validate()) {
             $user = new User();
-            $user->name = $this->name;
+            $user->username = $this->username;
             $user->email = $this->email;
-            $user->password = Yii::$app->security->generatePasswordHash($this->password);
+            $user->status = UserStatus::ACTIVE;
+            $user->password_hash = Yii::$app->security->generatePasswordHash($this->password);
+            $user->generateAuthKey();
             $user->save();
 
-//            assign role
+            //assign role
             $auth = Yii::$app->authManager;
             $userRole = $auth->getRole('user');
             $auth->assign($userRole, $user->getId());
@@ -66,7 +70,7 @@ class SignupForm extends Model
     {
         return [
             'email' => 'E-mail',
-            'name' => 'Имя',
+            'username' => 'Имя',
             'password' => 'Пароль',
             'password_repeat' => 'Повторите пароль',
         ];

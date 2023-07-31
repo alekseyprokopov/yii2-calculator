@@ -5,7 +5,6 @@
 /** @var string $content */
 
 use app\assets\AppAsset;
-use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
 use yii\helpers\Html;
@@ -34,26 +33,26 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 
     <?php $this->beginBody() ?>
 
-    <header id="header" class="py-4">
+    <header id="header" class="py-1">
         <?php
         NavBar::begin([
             'brandLabel' => Html::tag('div', '', ['class' => 'logo']),
             'brandUrl' => Yii::$app->homeUrl,
-            'options' => ['class' => 'navbar-expand-md navbar-dark fixed-top'],
+            'options' => ['class' => 'navbar-expand-md navbar-dark'],
             'containerOptions' => ['class' => ' justify-content-end']
         ]);
 
         $items = [
-            ['label' => 'Расчет доставки', 'url' => ['calculator/index']],
-            ['label' => 'Войти в систему', 'url' => ['user/login'], 'visible' => Yii::$app->user->isGuest],
-            ['label' => Yii::$app->user->identity->name,
+            ['label' => 'Расчет доставки', 'url' => ['/calculator/index']],
+            ['label' => 'Войти в систему', 'url' => ['/user/login'], 'visible' => Yii::$app->user->isGuest],
+            ['label' => Yii::$app->user->identity->username,
                 'items' => [
-                    ['label' => 'Профиль', 'url' => ['user/profile?id=' . Yii::$app->user->id]],
-                    ['label' => 'История расчётов', 'url' => ['calculator/history']],
-                    ['label' => 'Пользователи', 'url' => ['administrator/user-management'], 'visible' => Yii::$app->user->can('adminPermission')],
-                    ['label' => 'Выход', 'url' => ['user/logout'], 'linkOptions' => ['data-method' => 'post']],
+                    ['label' => 'Профиль', 'url' => ['/user/profile?id=' . Yii::$app->user->id]],
+                    ['label' => 'История расчётов', 'url' => ['/history/index']],
+                    ['label' => 'Пользователи', 'url' => ['/admin/user'], 'visible' => Yii::$app->user->can('administrator')],
+                    ['label' => 'Выход', 'url' => ['/user/logout'], 'linkOptions' => ['data-method' => 'post']],
                 ],
-                'visible' => !Yii::$app->user->isGuest
+                'visible' => Yii::$app->user->isGuest === false
             ]
         ];
         echo Nav::widget([
@@ -64,11 +63,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         ?>
     </header>
 
-    <main id="main" class="flex-shrink-0" role="main">
+    <main id="main" class="flex-shrink-0 text-light" role="main">
         <div class="container">
-            <?php if (!empty($this->params['breadcrumbs'])): ?>
-                <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
-            <?php endif ?>
+
             <?= $content ?>
         </div>
     </main>

@@ -13,7 +13,7 @@ $this->title = 'Информация';
 ?>
 
 <div class="calculator-profile">
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h2 class="text-center"><?= Html::encode($this->title) ?></h2>
 
 
     <section>
@@ -23,15 +23,17 @@ $this->title = 'Информация';
                     <div class="card mb-4">
                         <div class="card-body text-center">
                             <img src=
-                                 <?= Yii::$app->authManager->checkAccess($model->id, 'adminPermission') ?
+                                 <?= Yii::$app->authManager->checkAccess($model->id, 'administrator') ?
                                      "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1.webp" :
                                      "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" ?>
                                  alt="avatar"
                                  class="rounded-circle img-fluid" style="width: 150px;">
-                            <h5 class="my-3"><?= $model->name ?></h5>
-                            <p class="text-muted mb-2"><?= Yii::$app->authManager->checkAccess($model->id, 'adminPermission') ? 'Администратор' : 'Пользователь' ?></p>
-                                <?= Html::a('Журнал расчётов', ['calculator/history'], ['class' => 'btn btn-primary mb-2']) ?>
-                                <?=Html::beginForm(['user/logout']) . Html::submitButton('Выход', ['class' => 'btn btn-danger']) . Html::endForm() ?>
+                            <h5 class="my-3"><?= $model->username ?></h5>
+                            <p class="text-muted mb-2"><?= Yii::$app->authManager->checkAccess($model->id, 'administrator') ? 'Администратор' : 'Пользователь' ?></p>
+                            <?php if ($model->id === Yii::$app->user->id): ?>
+                                <?= Html::a('Журнал расчётов', ['history/index'], ['class' => 'btn btn-primary mb-2']) ?>
+                                <?= Html::beginForm(['user/logout']) . Html::submitButton('Выход', ['class' => 'btn btn-danger']) . Html::endForm() ?>
+                            <?php endif; ?>
                         </div>
 
                     </div>
@@ -45,7 +47,7 @@ $this->title = 'Информация';
                                     <p class="mb-0">Имя</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0"><?= $model->name ?></p>
+                                    <p class="text-muted mb-0"><?= $model->username ?></p>
                                 </div>
                             </div>
                             <hr>

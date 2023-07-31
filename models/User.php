@@ -2,88 +2,75 @@
 
 namespace app\models;
 
+use mdm\admin\components\UserStatus;
 use Yii;
+use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
  * @property int $id
- * @property string $name
+ * @property string $username
  * @property string $email
- * @property string $password
+ * @property string $password_hash
+ * @property int $status
  * @property string $auth_key
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    public static function tableName()
+
+    public function rules()
     {
-        return 'users';
+        return [
+            ['status', 'in', 'range' => [UserStatus::ACTIVE, UserStatus::INACTIVE]],
+        ];
     }
 
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($this->isNewRecord) {
-                $this->auth_key = Yii::$app->security->generateRandomString();
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Finds an identity by the given ID.
-     *
-     * @param string|int $id the ID to be looked for
-     * @return IdentityInterface|null the identity object that matches the given ID.
-     */
     public static function findIdentity($id)
     {
-        return static::findOne($id);
+        return static::findOne(['id' => $id, 'status' => UserStatus::ACTIVE]);
     }
 
-    /**
-     * Finds an identity by the given token.
-     *
-     * @param string $token the token to be looked for
-     * @return IdentityInterface|null the identity object that matches the given token.
-     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['access_token' => $token]);
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
+    public static function findByUsername($username)
+    {
+        return static::findOne(['username' => $username, 'status' => UserStatus::ACTIVE]);
+    }
 
-    /**
-     * @return int|string current user ID
-     */
     public function getId()
     {
-        return $this->id;
+        return $this->getPrimaryKey();
     }
 
-    /**
-     * @return string current user auth key
-     */
     public function getAuthKey()
     {
         return $this->auth_key;
     }
 
-    /**
-     * @return string current user registration data
-     */
-    public function getRegistrationData()
+    public function validateAuthKey($authKey)
     {
-        $date = User::find()->select(['created_at'])
-            ->where(['id' => $this->id])
-            ->scalar();
-        return $date;
+        return $this->getAuthKey() === $authKey;
     }
 
-    /**
-     * @return string count of current user calculations
-     */
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
+    }
+
+    public function getRole()
+    {
+        return Yii::$app->authManager->checkAccess($this->id, 'administrator') ? 'administrator' : 'user';
+    }
+
     public function getCalculationsCount()
     {
         return History::find()
@@ -91,25 +78,13 @@ class User extends ActiveRecord implements IdentityInterface
             ->count();
     }
 
-    /**
-     * @param string $authKey
-     * @return bool if auth key is valid for current user
-     */
-    public function validateAuthKey($authKey)
+    public function getRegistrationData()
     {
-        return $this->getAuthKey() === $authKey;
+        return User::find()->select(['created_at'])
+            ->where(['id' => $this->id])
+            ->scalar();
     }
 
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword(string $password): bool
-    {
-        return Yii::$app->security->validatePassword($password, $this->password);
-    }
 
     public static function findByEmail($email)
     {
@@ -118,16 +93,9 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function getEmailById($id)
     {
-        $email = User::find()->select(['email'])
+        return User::find()->select(['email'])
             ->where(['id' => $id])
             ->scalar();
-        return $email;
     }
-
-    public static function getRoleById($id)
-    {
-        return Yii::$app->authManager->checkAccess($id, 'adminPermission') ? 'administrator' : 'user';
-    }
-
 
 }

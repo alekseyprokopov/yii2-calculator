@@ -17,7 +17,6 @@ $config = [
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-            'defaultRoles' => ['administrator', 'user'],
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -28,8 +27,10 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
+            'loginUrl' => ['user/login'],
             'enableAutoLogin' => true,
         ],
+
         'errorHandler' => [
             'errorAction' => 'calculator/error',
         ],
@@ -48,6 +49,15 @@ $config = [
                 ],
             ],
         ],
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                    '@mdm/admin/views' => [
+                        '@app/views/administrator'
+                    ],
+                ],
+            ],
+        ],
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -59,6 +69,22 @@ $config = [
         ],
     ],
     'params' => $params,
+    'modules' => [
+        'admin' => [
+            'layout' => 'left-menu',
+            'class' => 'mdm\admin\Module',
+            'mainLayout' => '@app/views/layouts/main.php'
+        ]
+    ],
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'calculator/*',
+            'user/login',
+            'user/signup',
+            'user/signup-validation',
+        ]
+    ],
 ];
 
 if (YII_ENV_DEV) {

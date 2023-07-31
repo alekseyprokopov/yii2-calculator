@@ -3,24 +3,20 @@
 use yii\db\Migration;
 
 /**
- * Class m230708_183340_raw_types
+ * Class m230726_164112_create_tonnage
  */
-class m230708_183340_raw_types extends Migration
+class m230726_164112_create_tonnage extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
-
     public function up()
     {
-        $this->createTable('raw_types', [
+        $this->createTable('tonnage', [
             'id' => $this->primaryKey(11)->unsigned()->notNull(),
-            'name' => $this->string(10)->unsigned()->notNull()->unique(),
+            'value' => $this->tinyInteger()->unsigned()->notNull()->unique(),
             'created_at' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP()'),
             'updated_at' => $this->timestamp()->notNull()->defaultExpression("CURRENT_TIMESTAMP()")->append('ON UPDATE CURRENT_TIMESTAMP()'),
         ]);
 
-        $this->batchInsert('raw_types', ['name'], $this->getRawTypesData());
+        $this->batchInsert('tonnage', ['value'], $this->getTonnagesData());
     }
 
     /**
@@ -28,12 +24,12 @@ class m230708_183340_raw_types extends Migration
      */
     public function down()
     {
-        $this->dropTable('raw_types');
+        $this->dropTable('tonnage');
     }
 
-    private function getRawTypesData(): array
+    private function getTonnagesData(): array
     {
-        return [['шрот'], ['жмых'], ['соя']];
+        return [[25], [50], [75], [100]];
     }
 
 }

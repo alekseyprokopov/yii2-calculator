@@ -8,42 +8,40 @@
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
-$this->title = 'Вход';
+$this->title = 'Авторизация';
 ?>
-<div class="user-login text-light">
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="ftco-section">
+    <div class="container">
 
-    <p>Пожалуйста, заполните поля ниже, чтобы войти:</p>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="login-wrap p-4 p-md-5">
 
-    <div class="row">
-        <div class="col-lg-5">
+                    <h2 class="text-center mb-4"><?= Html::encode($this->title) ?></h2>
+                    <?php $form = ActiveForm::begin([
+                        'id' => 'user-form',
 
-            <?php $form = ActiveForm::begin([
-                'id' => 'user-form',
-                'fieldConfig' => [
-                    'template' => "{label}\n{input}\n{error}",
-                    'labelOptions' => ['class' => 'col-lg-3 col-form-label mr-lg-3'],
-                    'inputOptions' => ['class' => 'col-lg-3 form-control'],
-                    'errorOptions' => ['class' => 'col-lg-7 invalid-feedback'],
-                ],
-            ]); ?>
+                    ]); ?>
 
-            <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
+                    <?= $form->field($model, 'email')->textInput(['autofocus' => true])->input('email', ['placeholder' => "Email"])->label(false) ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+                    <?= $form->field($model, 'password')->passwordInput()->input('password', ['placeholder' => "Пароль"])->label(false) ?>
 
-            <?= $form->field($model, 'rememberMe')->checkbox([
-                'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            ]) ?>
+                    <?= $form->field($model, 'rememberMe')->checkbox([
+                        'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+                    ]) ?>
+                    <div class="d-grid gap-2 mb-3">
+                        <?= Html::submitButton('Войти', ['class' => 'btn btn-warning  btn-block ', 'name' => 'user-button']) ?>
+                    </div>
 
-            <div class="form-group d-flex justify-content-between align-items-center">
-                <div>
-                    <?= Html::submitButton('Вход', ['class' => 'btn btn-warning mt-2 btn-block', 'name' => 'user-button']) ?>
+                    <?php ActiveForm::end(); ?>
+                    <div>
+                        <p class="mb-0  text-end">Нет
+                            аккаунта? <?= Html::a('Зарегистрируйтесь', ['user/signup'], ['class' => 'link-warning fw-bold']) ?> </p>
+                    </div>
                 </div>
-                <?= Html::a('Регистрация', ['user/signup'], ['class' => 'btn btn-success mt-2 link-light']) ?>
             </div>
-            <?php ActiveForm::end(); ?>
-
         </div>
     </div>
-</div>
+</section>
+

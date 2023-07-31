@@ -19,28 +19,6 @@ use yii\widgets\ActiveForm;
 
 class AdministratorController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'actions' => ['user-management', 'delete-history', 'update-user', 'create-user'],
-                        'allow' => true,
-                        'roles' => ['adminPermission'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-
     public function actions()
     {
         return [
@@ -50,25 +28,6 @@ class AdministratorController extends Controller
         ];
     }
 
-    public function actionUserManagement()
-    {
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->get());
-
-        return $this->render('users', [
-            'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
-        ]);
-    }
-
-
-    public function actionDeleteHistory($id)
-    {
-        History::findOne($id)->delete();
-        return $this->redirect('history');
-    }
-
-
     public function actionUpdateUser($id)
     {
         $user = User::findOne($id);
@@ -76,10 +35,10 @@ class AdministratorController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->updateProfile();
-            return $this->redirect('users');
+            return $this->redirect('/admin/user');
         }
 
-        return $this->renderAjax('update-profile', [
+        return $this->renderAjax('user/update', [
             'model' => $model]);
     }
 
@@ -98,16 +57,10 @@ class AdministratorController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
-            return $this->redirect('users');
+            return $this->redirect('/admin/user');
         }
-        return $this->renderAjax('//user/signup', [
+        return $this->renderAjax('user/create', [
             'model' => $model]);
-    }
-
-    public function actionDeleteUser($id)
-    {
-        User::findIdentity($id)->delete();
-        return $this->redirect('users');
     }
 
 

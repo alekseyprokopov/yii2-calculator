@@ -8,43 +8,13 @@ use app\models\User;
 
 use Yii;
 
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
 class UserController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'actions' => ['login', 'signup', 'signup-validation'],
-                        'allow' => true,
-                        'roles' => ['guest'],
-                    ],
-                    [
-                        'actions' => ['logout', 'profile'],
-                        'allow' => true,
-                        'roles' => ['user'],
-                    ]
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'signup' => ['get', 'post'],
-                    'login' => ['get', 'post'],
-                    'logout' => ['post'],
-                    'signup-validation' => ['post'],
-                ],
-            ],
-        ];
-    }
 
     public function actionLogin()
     {
@@ -54,7 +24,7 @@ class UserController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            Yii::$app->session->setFlash('success-login', $model->user->name);
+            Yii::$app->session->setFlash('success-login', $model->user->username);
             return $this->goHome();
         }
 
@@ -96,28 +66,27 @@ class UserController extends Controller
     }
 
 
+    /**
+     * @throws ForbiddenHttpException
+     */
     public function actionProfile($id)
     {
-        $model = User::findIdentity($id);
-
-        if (Yii::$app->request->isAjax) {
-            return $this->renderAjax('profile', [
-                'model' => $model,
-            ]);
+        if (Yii::$app->user->can('viewProfile', ['owner_id' => $id])) {
+            $model = User::findIdentity($id);
+            return $this->render('profile', ['model' => $model]);
         }
+        throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
 
-        return $this->render('profile', ['model' => $model]);
     }
 
     public function actionAdmin()
     {
         $user = new User();
-        $user->name = 'admin1';
-        $user->email = 'admin1@mail.ru';
-        $user->password = Yii::$app->security->generatePasswordHash('admin1');
+        $user->username = 'admin';
+        $user->email = 'admin@mail.ru';
+        $user->password_hash = Yii::$app->security->generatePasswordHash('admin');
         $user->save();
 
-//            assign role
         $auth = Yii::$app->authManager;
         $userRole = $auth->getRole('administrator');
         $auth->assign($userRole, $user->getId());

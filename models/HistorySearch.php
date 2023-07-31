@@ -19,6 +19,11 @@ use yii\db\ActiveRecord;
  */
 class HistorySearch extends History
 {
+    public static function tableName()
+    {
+        return 'history';
+    }
+
     public function rules()
     {
         return [
@@ -29,7 +34,7 @@ class HistorySearch extends History
 
     public function search($params)
     {
-        $isAdmin = Yii::$app->user->can('adminPermission');
+        $isAdmin = Yii::$app->user->can('administrator');
         $query = $isAdmin ? History::find() : History::find()->where(['user_id' => Yii::$app->user->identity->getId()]);
 
         $dataProvider = new ActiveDataProvider([

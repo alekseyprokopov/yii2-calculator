@@ -12,18 +12,18 @@ class PricesRepository extends ActiveRecord
 {
     public static function tableName()
     {
-        return 'prices';
+        return 'price';
     }
 
     public function getResultPrice($raw_type, $tonnage, $month)
     {
         return (new Query())
-            ->select('price')
-            ->from('prices')
-            ->innerJoin('tonnages', 'prices.tonnage_id = tonnages.id')
-            ->innerJoin('months', 'prices.month_id = months.id')
-            ->innerJoin('raw_types', 'prices.raw_type_id = raw_types.id')
-            ->where('raw_types.name=:raw_type AND tonnages.value=:tonnage AND months.name=:month',
+            ->select('price.value')
+            ->from('price')
+            ->innerJoin('tonnage', 'price.tonnage_id = tonnage.id')
+            ->innerJoin('month', 'price.month_id = month.id')
+            ->innerJoin('raw_type', 'price.raw_type_id = raw_type.id')
+            ->where('raw_type.name=:raw_type AND tonnage.value=:tonnage AND month.name=:month',
                 [':raw_type' => $raw_type, ':tonnage' => $tonnage, ':month' => $month])
             ->scalar();
     }
@@ -32,7 +32,7 @@ class PricesRepository extends ActiveRecord
     {
         $data = (new Query())
             ->select('name')
-            ->from('raw_types')
+            ->from('raw_type')
             ->all();
         return ArrayHelper::map($data, 'name', 'name');
     }
@@ -41,7 +41,7 @@ class PricesRepository extends ActiveRecord
     {
         $data = (new Query())
             ->select('name')
-            ->from('months')
+            ->from('month')
             ->all();
         return ArrayHelper::map($data, 'name', 'name');
     }
@@ -50,7 +50,7 @@ class PricesRepository extends ActiveRecord
     {
         $data = (new Query())
             ->select('value')
-            ->from('tonnages')
+            ->from('tonnage')
             ->all();
         return ArrayHelper::map($data, 'value', 'value');
     }
@@ -58,14 +58,14 @@ class PricesRepository extends ActiveRecord
     public function getRawPricesByType($type)
     {
         $data = (new Query())
-            ->select('months.name as month, tonnages.value as tonnage, price ')
-            ->from('prices')
-            ->innerJoin('tonnages', 'prices.tonnage_id = tonnages.id')
-            ->innerJoin('months', 'prices.month_id = months.id')
-            ->innerJoin('raw_types', 'prices.raw_type_id = raw_types.id')
-            ->where('raw_types.name=:type',
+            ->select('month.name as month, tonnage.value as tonnage, price.value as price')
+            ->from('price')
+            ->innerJoin('tonnage', 'price.tonnage_id = tonnage.id')
+            ->innerJoin('month', 'price.month_id = month.id')
+            ->innerJoin('raw_type', 'price.raw_type_id = raw_type.id')
+            ->where('raw_type.name=:type',
                 [':type' => $type])
-            ->orderBy('prices.id')
+            ->orderBy('price.id')
             ->all();
 
         $result = [];
@@ -79,12 +79,12 @@ class PricesRepository extends ActiveRecord
     public function getPriceId($raw_type, $month, $tonnage)
     {
         return (new Query())
-            ->select('prices.id')
-            ->from('prices')
-            ->innerJoin('tonnages', 'prices.tonnage_id = tonnages.id')
-            ->innerJoin('months', 'prices.month_id = months.id')
-            ->innerJoin('raw_types', 'prices.raw_type_id = raw_types.id')
-            ->where('raw_types.name=:raw_type AND tonnages.value=:tonnage AND months.name=:month',
+            ->select('price.id')
+            ->from('price')
+            ->innerJoin('tonnage', 'price.tonnage_id = tonnage.id')
+            ->innerJoin('month', 'price.month_id = month.id')
+            ->innerJoin('raw_type', 'price.raw_type_id = raw_type.id')
+            ->where('raw_type.name=:raw_type AND tonnage.value=:tonnage AND month.name=:month',
                 [':raw_type' => $raw_type, ':tonnage' => $tonnage, ':month' => $month])
             ->scalar();
     }
