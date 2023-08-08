@@ -25,3 +25,9 @@
 - `yii migrate --migrationPath=@yii/rbac/migrations` - создание таблиц для сохранения rbac-данных
 - `yii rbac/init` - создание ролей (admin, user), назначение первичных маршрутов для ролей. Назнечение ролей
   пользователям admin, user
+
+## API example
+- `api/calculate-price?raw_type=соя&tonnage=25&month=январь`
+
+## CMD example
+- `yii calculate --month=январь --raw_type=соя --tonnage=25`

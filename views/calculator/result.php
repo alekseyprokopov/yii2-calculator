@@ -10,20 +10,15 @@ use yii\bootstrap5\Modal;
 
 ?>
 
-
-
 <?php
-Modal::begin(['title' => 'Расчет',
-    'id' => 'resultModal',
-    'size' => Modal::SIZE_LARGE,
-    'clientOptions' => ['show' => true],
-    'options' => ['class' => 'text-dark']]);
-
+$selectedRawType = $repository->getRawTypeById($model->raw_type_id);
+$selectedTonnage = $repository->getTonnageById($model->tonnage_id);
+$selectedMonth = $repository->getMonthById($model->month_id);
 ?>
 <div class="site-result">
-    <p>Cырье: <?= $model->raw_type ?></p>
-    <p>Тоннаж: <?= $model->tonnage ?></p>
-    <p>Месяц: <?= $model->month ?></p>
+    <p>Cырье: <?= $selectedRawType ?></p>
+    <p>Тоннаж: <?= $selectedTonnage ?></p>
+    <p>Месяц: <?= $selectedMonth ?></p>
 
     <table class="table table-bordered border-warning table-hover bg-transparent">
         <thead>
@@ -32,12 +27,12 @@ Modal::begin(['title' => 'Расчет',
             $months = [];
             $tableRows = [];
 
-            foreach ($repository->getRawPricesByType($model->raw_type) as $month => $item) {
+            foreach ($repository->getRawPricesByType($model->raw_type_id) as $month => $item) {
                 $months[] = "<th scope='col'>  " . $month . "  </th>";
                 foreach ($item as $tonnage => $price) {
                     $tableRows['<th scope="row">' . $tonnage . '</th>'][] =
                         '<td '
-                        . (((string)$tonnage === $model->tonnage && $month === $model->month) ? 'class="bg-warning">' : '>')
+                        . (((string)$tonnage === $selectedTonnage && $month === $selectedMonth) ? 'class="bg-warning">' : '>')
                         . $price . '</td>';;
                 }
             }
@@ -58,7 +53,6 @@ Modal::begin(['title' => 'Расчет',
         </tbody>
     </table>
     <p>ИТОГО:
-        <b><?= $repository->getResultPrice($model->raw_type, $model->tonnage, $model->month) . ' тыс. руб.' ?> </b>
+        <b><?= $repository->getResultPrice($model->raw_type_id, $model->tonnage_id, $model->month_id) . ' тыс. руб.' ?> </b>
     </p>
 </div>
-<?php Modal::end() ?>

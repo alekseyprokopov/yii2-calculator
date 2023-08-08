@@ -74,7 +74,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function getCalculationsCount()
     {
         return History::find()
-            ->where(['user_id' => $this->id])
+            ->where(['email' => $this->email])
             ->count();
     }
 

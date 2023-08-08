@@ -35,10 +35,14 @@ $this->title = 'Журнал расчетов'
 
                     ],
                     [
-                        'attribute' => 'user_id',
-                        'value' => 'user.username',
+                        'attribute' => 'email',
+                        'label' => 'E-mail',
+                        'visible' => Yii::$app->user->can('administrator'),
+                        'sortLinkOptions' => ['class' => 'link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover'],
+                    ],
+                    [
+                        'attribute' => 'username',
                         'label' => 'Имя пользователя',
-                        'filter' => false,
                         'visible' => Yii::$app->user->can('administrator'),
                         'sortLinkOptions' => ['class' => 'link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover'],
                     ],
@@ -77,7 +81,8 @@ $this->title = 'Журнал расчетов'
                     ]
                 ],
             ]) ?>
-            <div class="modal fade text-dark" id="modalContent" tabindex="-1" aria-labelledby="modalContent" aria-hidden="true">
+            <div class="modal fade text-dark" id="modalContent" tabindex="-1" aria-labelledby="modalContent"
+                 aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -106,12 +111,6 @@ $js = <<<JS
         $('#modalContent').modal('show')
         return false;
     })
-    
-       
- 
-
 JS;
-
 $this->registerJs($js);
-
 ?>

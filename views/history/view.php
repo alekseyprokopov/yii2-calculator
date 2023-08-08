@@ -12,13 +12,14 @@
 <div>
 
     <?php if (Yii::$app->user->can('administrator')): ?>
-        <p>Имя пользователя: <?= $model->getUserName() ?></p>
+        <p>Имя пользователя: <?= $model->username ?></p>
+        <p>Email: <?= $model->email ?></p>
     <?php endif; ?>
 
     <p>Cырье: <?= $model->raw_type ?></p>
     <p>Тоннаж: <?= $model->tonnage ?></p>
     <p>Месяц: <?= $model->month ?></p>
-    <p>Дата выполнения расчёта: <?= date('d.m.Y H:i:s', strtotime($model->getCalculationData())) ?></p>
+    <p>Дата выполнения расчёта: <?= date('d.m.Y H:i:s', strtotime($model->getCalculationData($model->id))) ?></p>
 
     <table class="table table-bordered border-warning table-hover bg-transparent">
         <thead>

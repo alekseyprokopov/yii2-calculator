@@ -9,6 +9,7 @@ $config = [
     'bootstrap' => ['log'],
     'defaultRoute' => 'calculator/index',
     'language' => 'ru',
+    'timeZone' => 'Europe/Moscow',
     'name' => 'ЭФКО калькулятор',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -83,6 +84,7 @@ $config = [
             'user/login',
             'user/signup',
             'user/signup-validation',
+            'api/*'
         ]
     ],
 ];

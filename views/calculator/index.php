@@ -42,7 +42,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
                     <div class="row">
                         <div class="col">
                             <?=
-                            $form->field($model, 'raw_type')
+                            $form->field($model, 'raw_type_id')
                                 ->dropDownList(
                                     $repository->getRawTypesList(),
                                     ['prompt' => 'Не выбрано'],
@@ -52,7 +52,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
 
                         <div class="col">
                         <?=
-                        $form->field($model, 'tonnage')
+                        $form->field($model, 'tonnage_id')
                             ->dropDownList(
                                 $repository->getTonnagesList(),
                                 ['prompt' => 'Не выбрано'],
@@ -62,7 +62,7 @@ $this->title = 'Калькулятор стоимости доставки сы�
                         <div class="col">
 
                         <?=
-                        $form->field($model, 'month')
+                        $form->field($model, 'month_id')
                             ->dropDownList(
                                 $repository->getMonthsList(),
                                 ['prompt' => 'Не выбрано']
@@ -79,10 +79,18 @@ $this->title = 'Калькулятор стоимости доставки сы�
         </div>
     </div>
 </section>
-<div id="modal-content"></div>
+<div class="modal fade text-dark" id="modalContent" tabindex="-1" aria-labelledby="modalContent" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalContentLabel">Расчёт</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"></div>
 
-
-
+        </div>
+    </div>
+</div>
 
 
 <?php
@@ -95,8 +103,8 @@ $js = <<<JS
         type: 'POST',
         data: data,
         success: function(response) {
-          $('#modal-content').html(response)
-          $('#resultModal').modal('show')
+          $('#modalContent').find('.modal-body').html(response)
+          $('#modalContent').modal('show')
         }
         })
         return false;
@@ -105,10 +113,9 @@ $js = <<<JS
 
 
 JS;
-
 $this->registerJs($js);
-
 ?>
+
 
 
 

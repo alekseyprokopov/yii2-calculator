@@ -40,7 +40,8 @@ class HistoryController extends Controller
     public function actionView($id)
     {
         $model = History::findOne($id);
-        if (Yii::$app->user->can('viewProfile', ['owner_id' => $model->user_id])) {
+        $owner_id = User::find()->select('id')->where(['email' => $model->email])->scalar();
+        if (Yii::$app->user->can('viewProfile', ['owner_id' => $owner_id])) {
             return $this->renderAjax('view', ['model' => $model]);
         }
         throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));

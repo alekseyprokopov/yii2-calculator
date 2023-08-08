@@ -28,10 +28,9 @@ class CalculatorController extends Controller
         $repository = new PricesRepository();
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            $session = Yii::$app->session;
-            $session->close();
 
             if (Yii::$app->user->isGuest === false) {
+//                $model->saveToQueue();
                 $history = new History();
                 $history->snapshot($model);
             };
@@ -58,24 +57,3 @@ class CalculatorController extends Controller
     }
 
 }
-
-
-
-
-
-
-//if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-//            Yii::$app->response->format = Response::FORMAT_JSON;
-//            return ActiveForm::validate($model);
-//
-//            //Save to Queue
-//            $basePath = \Yii::getAlias('@runtime') . '/queue.job';
-//            $data = $model->getAttributes();
-//
-//            if (file_exists($basePath)) {
-//                unlink($basePath);
-//            }
-//
-//            foreach ($data as $key => $value) {
-//                file_put_contents($basePath, "{$key} => {$value}" . PHP_EOL, FILE_APPEND);
-//            }

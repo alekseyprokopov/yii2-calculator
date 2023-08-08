@@ -28,8 +28,8 @@ class m230726_164147_create_user extends Migration
     public function getUserData()
     {
         return [
-            ['admin', 'admin@admin.ru', Yii::$app->security->generatePasswordHash('admin'), 10, Yii::$app->security->generateRandomString()],
-            ['user', 'user@user.ru', Yii::$app->security->generatePasswordHash('user'), 10, Yii::$app->security->generateRandomString()],
+            ['admin', 'admin', Yii::$app->security->generatePasswordHash('admin'), 10, Yii::$app->security->generateRandomString()],
+            ['user', 'user', Yii::$app->security->generatePasswordHash('user'), 10, Yii::$app->security->generateRandomString()],
 
         ];
     }

@@ -17,6 +17,7 @@ $columns = [
     [
         'attribute' => 'id',
         'label' => 'ID',
+        'filter' => false
     ],
     [
         'attribute' => 'email',
@@ -27,6 +28,8 @@ $columns = [
     [
         'attribute' => 'username',
         'label' => 'Имя пользователя',
+        'filter' => false,
+
         'sortLinkOptions' => ['class' => 'link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover'],
     ],
 ];

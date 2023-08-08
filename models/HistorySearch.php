@@ -28,14 +28,14 @@ class HistorySearch extends History
     {
         return [
             [['tonnage'], 'integer'],
-            [['month', 'raw_type'], 'safe'],
+            [['email','username','month', 'raw_type'], 'safe'],
         ];
     }
 
     public function search($params)
     {
         $isAdmin = Yii::$app->user->can('administrator');
-        $query = $isAdmin ? History::find() : History::find()->where(['user_id' => Yii::$app->user->identity->getId()]);
+        $query = $isAdmin ? History::find() : History::find()->where(['email' => Yii::$app->user->identity->email]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -52,6 +52,8 @@ class HistorySearch extends History
         // adjust the query by adding the filters
         $query->andFilterWhere(['like', 'tonnage', $this->tonnage])
             ->andFilterWhere(['like', 'month', $this->month])
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'raw_type', $this->raw_type]);
 
         return $dataProvider;

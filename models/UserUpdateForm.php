@@ -24,7 +24,6 @@ class UserUpdateForm extends User
     public function updateProfile()
     {
         if ($this->validate()) {
-            $manager = Yii::$app->authManager;
             $user = $this->_user;
             $user->username = $this->username;
             $user->email = $this->email;
