@@ -79,19 +79,19 @@ class UserController extends Controller
 
     }
 
-    public function actionAdmin()
-    {
-        $user = new User();
-        $user->username = 'admin';
-        $user->email = 'admin@mail.ru';
-        $user->password_hash = Yii::$app->security->generatePasswordHash('admin');
-        $user->save();
-
-        $auth = Yii::$app->authManager;
-        $userRole = $auth->getRole('administrator');
-        $auth->assign($userRole, $user->getId());
-        echo 'success';
-    }
+//    public function actionAdmin()
+//    {
+//        $user = new User();
+//        $user->username = 'admin';
+//        $user->email = 'admin@mail.ru';
+//        $user->password_hash = Yii::$app->security->generatePasswordHash('admin');
+//        $user->save();
+//
+//        $auth = Yii::$app->authManager;
+//        $userRole = $auth->getRole('administrator');
+//        $auth->assign($userRole, $user->getId());
+//        echo 'success';
+//    }
 }
 
 

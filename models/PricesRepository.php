@@ -2,8 +2,6 @@
 
 namespace app\models;
 
-use yii\base\Model;
-use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;

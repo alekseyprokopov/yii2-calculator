@@ -50,7 +50,8 @@ class HistorySearch extends History
         }
 
         // adjust the query by adding the filters
-        $query->andFilterWhere(['like', 'tonnage', $this->tonnage])
+        $query
+            ->andFilterWhere(['like', 'tonnage', $this->tonnage])
             ->andFilterWhere(['like', 'month', $this->month])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'username', $this->username])

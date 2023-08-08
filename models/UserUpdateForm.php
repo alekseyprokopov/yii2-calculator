@@ -2,15 +2,14 @@
 
 namespace app\models;
 
-use Yii;
+/**
+ * @property int $id
+ * @property string $username
+ * @property string $email
+ */
 
 class UserUpdateForm extends User
 {
-    //ПЕРЕНЕСТИ!!!!
-    public $id;
-    public $username;
-    public $email;
-
     private ?User $_user;
 
     public function __construct(User $user = null)

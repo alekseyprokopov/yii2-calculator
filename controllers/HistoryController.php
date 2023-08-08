@@ -8,7 +8,6 @@ use app\models\HistorySearch;
 use app\models\User;
 use Yii;
 use yii\web\Controller;
-use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
 
 class HistoryController extends Controller

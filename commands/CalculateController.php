@@ -9,7 +9,6 @@ use yii\helpers\Console;
 use yii\console\ExitCode;
 use yii\helpers\BaseConsole;
 use yii\console\widgets\Table;
-use Yii;
 
 class CalculateController extends Controller
 {

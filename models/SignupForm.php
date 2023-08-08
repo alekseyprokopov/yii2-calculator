@@ -7,7 +7,6 @@ use mdm\admin\components\UserStatus;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
-use yii\helpers\ArrayHelper;
 
 class SignupForm extends Model
 {

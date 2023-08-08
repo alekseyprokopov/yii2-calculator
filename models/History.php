@@ -28,11 +28,6 @@ class History extends ActiveRecord
         ];
     }
 
-    public function getUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
-    }
-
     public function getRawPrices()
     {
         return json_decode($this->table_data);
