@@ -98,9 +98,14 @@ a {
     height: 62px;
 }
 
-.list-group-item.active{
+.list-group-item.active {
     background-color: #ffc107;
-    color:black;
+    color: black;
     border-color: #ffc107;
+}
+
+tr td:last-child {
+    width: 1%;
+    white-space: nowrap;
 }
 

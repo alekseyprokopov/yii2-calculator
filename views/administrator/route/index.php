@@ -41,12 +41,6 @@ $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate
         <div class="input-group">
             <input class="form-control search" data-target="available"
                    placeholder="<?=Yii::t('rbac-admin', 'Search for available');?>">
-            <span class="input-group-btn">
-                <?=Html::a('<span class="glyphicon glyphicon-refresh"></span>', ['refresh'], [
-    'class' => 'btn btn-default',
-    'id' => 'btn-refresh',
-]);?>
-            </span>
         </div>
         <select multiple size="20" class="form-control list" data-target="available"></select>
     </div>

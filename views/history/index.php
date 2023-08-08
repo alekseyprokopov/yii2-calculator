@@ -25,7 +25,6 @@ $this->title = 'Журнал расчетов'
                 'layout' => "{pager}\n{summary}\n{items}",
                 'pager' => [
                     'class' => 'yii\bootstrap5\LinkPager'
-
                 ],
                 'columns' => [
                     [

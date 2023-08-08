@@ -20,7 +20,6 @@ $this->title = 'Авторизация';
                     <h2 class="text-center mb-4"><?= Html::encode($this->title) ?></h2>
                     <?php $form = ActiveForm::begin([
                         'id' => 'user-form',
-
                     ]); ?>
 
                     <?= $form->field($model, 'email')->textInput(['autofocus' => true])->input('email', ['placeholder' => "Email"])->label(false) ?>
