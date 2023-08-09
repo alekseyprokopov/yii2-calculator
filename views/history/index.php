@@ -70,7 +70,9 @@ $this->title = 'Журнал расчетов'
                     ],
                     [
                         'attribute' => 'created_at',
-                        'format' => ['date', 'php:d-m-Y H:i:s'],
+                        'value' => function ($data) {
+                            return date('d.m.Y H:i:s', strtotime($data['created_at']));
+                        },
                         'label' => 'Дата',
                         'sortLinkOptions' => ['class' => 'link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover'],
                     ],

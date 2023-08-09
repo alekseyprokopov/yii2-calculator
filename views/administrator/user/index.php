@@ -22,6 +22,10 @@ $this->params['breadcrumbs'][] = $this->title;
         GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
+//            'formatter' => [
+//                'class' => 'yii\i18n\Formatter',
+//                'timeZone' => 'Europe/Minsk'
+//            ],
             'tableOptions' => ['class' => 'table table-bordered  table-hover'],
             'layout' => "{pager}\n{summary}\n{items}",
             'pager' => [
@@ -59,7 +63,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 [
                     'attribute' => 'created_at',
-                    'format' => ['date', 'php:d-m-Y H:i:s'],
+                    'value' => function ($data) {
+                        return date('d.m.Y H:i:s', strtotime($data['created_at']));
+                    },
+//                    'format' => ['date', 'php:d-m-Y H:i:s'],
                     'label' => 'Дата регистрации',
                     'sortLinkOptions' => ['class' => 'link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover'],
                 ],
@@ -72,7 +79,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ?>
     </div>
 
-    <div class="modal fade text-dark" id="createUserModal" tabindex="-1" aria-labelledby="createUserModal" aria-hidden="true">
+    <div class="modal fade text-dark" id="createUserModal" tabindex="-1" aria-labelledby="createUserModal"
+         aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -85,7 +93,8 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <div class="modal fade text-dark" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModal" aria-hidden="true">
+    <div class="modal fade text-dark" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModal"
+         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
