@@ -9,7 +9,6 @@ use yii\helpers\Console;
 use yii\console\ExitCode;
 use yii\helpers\BaseConsole;
 use yii\console\widgets\Table;
-use Yii;
 
 class CalculateController extends Controller
 {
@@ -25,14 +24,18 @@ class CalculateController extends Controller
     public function actionIndex()
     {
         $repository = new PricesRepository();
-        $model = new CalculatorForm($this->raw_type, $this->month, $this->tonnage);
+        $model = new CalculatorForm();
+
+        $model->month_id = $repository->getMonthIdByName($this->month);
+        $model->raw_type_id = $repository->getRawTypeIdByName($this->raw_type);
+        $model->tonnage_id = $repository->getTonnageIdByValue($this->tonnage);;
 
         if ($model->validate()) {
             echo "Месяц: $this->month" . PHP_EOL
                 . "Тип сырья: $this->raw_type" . PHP_EOL
                 . "Тоннаж: $this->tonnage" . PHP_EOL
                 . "Результат: {$repository->getResultPrice($this->raw_type,$this->tonnage,$this->month)} тыс. руб." . PHP_EOL;
-            $this->drawTable($repository, $this->raw_type);
+            $this->drawTable($repository, $model->raw_type_id);
             return ExitCode::OK;
         };
 
@@ -46,21 +49,21 @@ class CalculateController extends Controller
         return ExitCode::DATAERR;
     }
 
-    private function drawTable(PricesRepository $repository, string $raw_type)
+    private function drawTable(PricesRepository $repository, string $raw_type_id)
     {
         //rows for table
         $rows = [];
-        foreach ($repository->getTonnagesList() as $tonnage) {
+        foreach ($repository->getTonnagesList() as $tonnage_id => $tonnage) {
             $row = [$tonnage];
-            foreach ($repository->getMonthsList() as $month) {
-                $row[] = $repository->getResultPrice($raw_type, $tonnage, $month);
+            foreach ($repository->getMonthsList() as $month_id => $month) {
+                $row[] = $repository->getResultPrice($raw_type_id, $tonnage_id, $month_id);
             }
             $rows[] = $row;
         }
 
         $table = new Table();
         $table
-            ->setHeaders(['тоннаж/месяц', ...array_keys($repository->getMonthsList())])
+            ->setHeaders(['тоннаж/месяц', ...array_values($repository->getMonthsList())])
             ->setRows($rows);
         Console::output(Console::ansiFormat($table->run(), [BaseConsole::FG_RED]));
     }

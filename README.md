@@ -18,3 +18,16 @@
 - `make app-php-cli-exec` - запуск команды внутри контейнера php-cli
 - `composer-install` - установка пакетов-зависимостей php приложения
 - `make run-yii` - просмотра доступных команд приложения на Yii2
+
+## Миграции
+
+- `yii migrate` - запуск основных миграций. Создание таблиц: tonnage, month, raw_type, price, user, history
+- `yii migrate --migrationPath=@yii/rbac/migrations` - создание таблиц для сохранения rbac-данных
+- `yii rbac/init` - создание ролей (admin, user), назначение первичных маршрутов для ролей. Назнечение ролей
+  пользователям admin, user
+
+## API example
+- `api/calculate-price?raw_type=соя&tonnage=25&month=январь`
+
+## CMD example
+- `yii calculate --month=январь --raw_type=соя --tonnage=25`

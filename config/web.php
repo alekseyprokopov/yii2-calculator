@@ -7,31 +7,33 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-//    'layout' => 'calculator',
+    'defaultRoute' => 'calculator/index',
     'language' => 'ru',
+//    'timeZone' => 'Europe/Moscow',
     'name' => 'ЭФКО калькулятор',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'VRjTK2wIVS6FhHWHUnMWV902S76TwHXx',
-            //разрешает получать пост запросы
-            'parsers' => [
-                'application/json' => 'yii\web\JsonParser',
-            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
             'identityClass' => 'app\models\User',
+            'loginUrl' => ['user/login'],
             'enableAutoLogin' => true,
         ],
+
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'calculator/error',
         ],
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
@@ -48,6 +50,15 @@ $config = [
                 ],
             ],
         ],
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                    '@mdm/admin/views' => [
+                        '@app/views/administrator'
+                    ],
+                ],
+            ],
+        ],
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -59,6 +70,23 @@ $config = [
         ],
     ],
     'params' => $params,
+    'modules' => [
+        'admin' => [
+            'layout' => 'left-menu',
+            'class' => 'mdm\admin\Module',
+            'mainLayout' => '@app/views/layouts/main.php'
+        ]
+    ],
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'calculator/*',
+            'user/login',
+            'user/signup',
+            'user/signup-validation',
+            'api/*'
+        ]
+    ],
 ];
 
 if (YII_ENV_DEV) {
@@ -79,3 +107,4 @@ if (YII_ENV_DEV) {
 }
 
 return $config;
+
