@@ -10,6 +10,10 @@ namespace app\models;
 
 class UserUpdateForm extends User
 {
+    public static function tableName()
+    {
+        return 'user';
+    }
     private ?User $_user;
 
     public function __construct(User $user = null)

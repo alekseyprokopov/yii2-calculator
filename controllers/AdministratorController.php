@@ -23,9 +23,9 @@ class AdministratorController extends Controller
 
     public function actionUpdateUser($id)
     {
+
         $user = User::findOne($id);
         $model = new UserUpdateForm($user);
-
         if ($model->load(Yii::$app->request->post())) {
             $model->updateProfile();
             return $this->redirect('/admin/user');
