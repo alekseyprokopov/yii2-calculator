@@ -34,7 +34,7 @@ class CalculateController extends Controller
             echo "Месяц: $this->month" . PHP_EOL
                 . "Тип сырья: $this->raw_type" . PHP_EOL
                 . "Тоннаж: $this->tonnage" . PHP_EOL
-                . "Результат: {$repository->getResultPrice($this->raw_type,$this->tonnage,$this->month)} тыс. руб." . PHP_EOL;
+                . "Результат: {$repository->getResultPrice($model->raw_type_id,$model->tonnage_id,$model->month_id)} тыс. руб." . PHP_EOL;
             $this->drawTable($repository, $model->raw_type_id);
             return ExitCode::OK;
         };
