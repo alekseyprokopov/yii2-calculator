@@ -4,11 +4,10 @@
 
 /** @var string $content */
 
-use yii\helpers\Html;
+use app\assets\AppAsset;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
-use yii\bootstrap5\Breadcrumbs;
-use app\assets\AppAsset;
+use yii\helpers\Html;
 
 AppAsset::register($this);
 
@@ -26,6 +25,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <html lang="<?= Yii::$app->language ?>" class="h-100">
     <head>
         <title><?= Html::encode($this->title) ?></title>
+        <?= Html::csrfMetaTags() ?>
         <?php $this->head() ?>
     </head>
 
@@ -33,30 +33,39 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 
     <?php $this->beginBody() ?>
 
-    <header id="header" class="py-4">
+    <header id="header" class="py-1">
         <?php
         NavBar::begin([
             'brandLabel' => Html::tag('div', '', ['class' => 'logo']),
             'brandUrl' => Yii::$app->homeUrl,
-            'options' => ['class' => 'navbar-expand-md navbar-dark fixed-top'],
+            'options' => ['class' => 'navbar-expand-md navbar-dark'],
             'containerOptions' => ['class' => ' justify-content-end']
         ]);
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right d-flex gap-3'],
-            'items' => [
-                ['label' => 'Расчет доставки', 'url' => ['/site/index']],
-//                 ['label' => 'Вход', 'url' => ['/login/index']],
+
+        $items = [
+            ['label' => 'Расчет доставки', 'url' => ['/calculator/index']],
+            ['label' => 'Войти в систему', 'url' => ['/user/login'], 'visible' => Yii::$app->user->isGuest],
+            ['label' => Yii::$app->user->identity->username,
+                'items' => [
+                    ['label' => 'Профиль', 'url' => ['/user/profile?id=' . Yii::$app->user->id]],
+                    ['label' => 'История расчётов', 'url' => ['/history/index']],
+                    ['label' => 'Пользователи', 'url' => ['/admin/user'], 'visible' => Yii::$app->user->can('administrator')],
+                    ['label' => 'Выход', 'url' => ['/user/logout'], 'linkOptions' => ['data-method' => 'post']],
+                ],
+                'visible' => Yii::$app->user->isGuest === false
             ]
+        ];
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav nav navbar-right d-flex gap-3'],
+            'items' => $items
         ]);
         NavBar::end();
         ?>
     </header>
 
-    <main id="main" class="flex-shrink-0" role="main">
-        <div class="container">
-            <?php if (!empty($this->params['breadcrumbs'])): ?>
-                <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
-            <?php endif ?>
+    <main id="main" class="flex-shrink-0 text-light" role="main">
+        <div class="container mb-3">
+
             <?= $content ?>
         </div>
     </main>
@@ -66,7 +75,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <div class="container">
             <div class="row text-muted">
                 <div class="col-md-6 text-center text-md-start">&copy; ЭФКО Стартер 2023</div>
-                
+
             </div>
         </div>
     </footer>

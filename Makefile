@@ -1,5 +1,10 @@
 include .env
 
+before-start:
+	yii migrate --interactive=0
+	yii migrate --migrationPath=@yii/rbac/migrations --interactive=0
+	yii rbac/init
+
 install:
 	@$(MAKE) -s down
 	@$(MAKE) -s docker-build

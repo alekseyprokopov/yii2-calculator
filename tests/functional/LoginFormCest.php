@@ -4,7 +4,7 @@ class LoginFormCest
 {
     public function _before(\FunctionalTester $I)
     {
-        $I->amOnRoute('site/login');
+        $I->amOnRoute('calculator/user');
     }
 
     public function openLoginPage(\FunctionalTester $I)
@@ -31,7 +31,7 @@ class LoginFormCest
 
     public function loginWithEmptyCredentials(\FunctionalTester $I)
     {
-        $I->submitForm('#login-form', []);
+        $I->submitForm('#user-form', []);
         $I->expectTo('see validations errors');
         $I->see('Username cannot be blank.');
         $I->see('Password cannot be blank.');
@@ -39,7 +39,7 @@ class LoginFormCest
 
     public function loginWithWrongCredentials(\FunctionalTester $I)
     {
-        $I->submitForm('#login-form', [
+        $I->submitForm('#user-form', [
             'LoginForm[username]' => 'admin',
             'LoginForm[password]' => 'wrong',
         ]);
@@ -49,11 +49,11 @@ class LoginFormCest
 
     public function loginSuccessfully(\FunctionalTester $I)
     {
-        $I->submitForm('#login-form', [
+        $I->submitForm('#user-form', [
             'LoginForm[username]' => 'admin',
             'LoginForm[password]' => 'admin',
         ]);
         $I->see('Logout (admin)');
-        $I->dontSeeElement('form#login-form');              
+        $I->dontSeeElement('form#user-form');
     }
 }

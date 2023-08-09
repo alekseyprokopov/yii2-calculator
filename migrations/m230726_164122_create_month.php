@@ -3,24 +3,20 @@
 use yii\db\Migration;
 
 /**
- * Class m230708_183340_raw_types
+ * Class m230726_164122_create_month
  */
-class m230708_183340_raw_types extends Migration
+class m230726_164122_create_month extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
-
     public function up()
     {
-        $this->createTable('raw_types', [
+        $this->createTable('month', [
             'id' => $this->primaryKey(11)->unsigned()->notNull(),
             'name' => $this->string(10)->unsigned()->notNull()->unique(),
             'created_at' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP()'),
             'updated_at' => $this->timestamp()->notNull()->defaultExpression("CURRENT_TIMESTAMP()")->append('ON UPDATE CURRENT_TIMESTAMP()'),
         ]);
 
-        $this->batchInsert('raw_types', ['name'], $this->getRawTypesData());
+        $this->batchInsert('month', ['name'], $this->getMonthsData());
     }
 
     /**
@@ -28,12 +24,13 @@ class m230708_183340_raw_types extends Migration
      */
     public function down()
     {
-        $this->dropTable('raw_types');
+        $this->dropTable('month');
     }
 
-    private function getRawTypesData(): array
+    private function getMonthsData()
     {
-        return [['шрот'], ['жмых'], ['соя']];
+        return [
+            ['январь'], ['февраль'], ['август'], ['сентябрь'], ['октябрь'], ['ноябрь']
+        ];
     }
-
 }
